@@ -9,13 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 2) do
 
   create_table "pictures", :force => true do |t|
     t.integer  "fb_user_id"
     t.string   "filename"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "size"
+    t.string   "content_type"
+    t.integer  "height"
+    t.integer  "width"
+    t.integer  "parent_id"
+    t.string   "thumbnail"
   end
 
 end
