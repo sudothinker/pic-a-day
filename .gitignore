@@ -1,6 +1,6 @@
 .DS_Store
 
 log/*.log
-log/development.log
+config/amazon_s3.yml
 config/database.yml
 tmp
