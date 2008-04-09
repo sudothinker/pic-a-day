@@ -132,3 +132,11 @@ Processing PicturesController#index (for 127.0.0.1 at 2008-04-08 21:47:37) [GET]
 Redirected to http://www.facebook.com/install.php?api_key=c1ab95278cb7c018db29315af1c2a8f8&v=1.0
 Filter chain halted as [#<ActionController::Filters::ClassMethods::SymbolFilter:0x24ccfb4 @filter=:ensure_application_is_installed_by_facebook_user>] rendered_or_redirected.
 Completed in 0.00033 (3030 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://localhost/]
+
+
+Processing PicturesController#index (for 127.0.0.1 at 2008-04-08 21:48:39) [GET]
+  Session ID: BAh7BzoVZmFjZWJvb2tfc2Vzc2lvblU6GEZhY2Vib29rZXI6OlNlc3Npb25b%0ADDAwMDAwIiVjMWFiOTUyNzhjYjdjMDE4ZGIyOTMxNWFmMWMyYThmOCIlYzkw%0AMWI4OGFiYjdkMDczOGQ1MzhkNGM3OTM0ZGI4MTEiCmZsYXNoSUM6J0FjdGlv%0AbkNvbnRyb2xsZXI6OkZsYXNoOjpGbGFzaEhhc2h7AAY6CkB1c2VkewA%3D--121472881100f2dfa56eca1c379ded3be60e7b4a
+  Parameters: {"action"=>"index", "controller"=>"pictures"}
+Redirected to http://www.facebook.com/install.php?api_key=c1ab95278cb7c018db29315af1c2a8f8&v=1.0
+Filter chain halted as [#<ActionController::Filters::ClassMethods::SymbolFilter:0x24ccfc8 @filter=:ensure_application_is_installed_by_facebook_user>] rendered_or_redirected.
+Completed in 0.00037 (2702 reqs/sec) | DB: 0.00000 (0%) | 302 Found [http://localhost/]
