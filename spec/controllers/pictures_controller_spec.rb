@@ -62,4 +62,8 @@ describe "misc specs" do
   it "should allow the user to delete a previous picture but not retake it" do
   
   end
+  
+  it "should this is a test... pushing to my own local -jesse" do
+    
+  end
 end
