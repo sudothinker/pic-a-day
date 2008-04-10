@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe "misc specs" do
-  controller_name :ads
+  controller_name :pictures
 
   it "should save the picture as a full image of size 480x360" do
   
