@@ -74,8 +74,4 @@ describe "misc specs" do
     
   end
   
-  
-  it "should here is a test to push to michael -jesse" do
-    
-  end
 end
