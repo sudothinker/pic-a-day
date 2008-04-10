@@ -63,7 +63,16 @@ describe "misc specs" do
   
   end
   
-  it "should this is a test... pushing to my own local -jesse" do
+  
+  # profile page
+  
+  it "should show the user's picture if user took one today" do
     
   end
+  
+  it "should show an empty silhouette if the user has not taken a picture today" do
+    
+  end
+  
+
 end
