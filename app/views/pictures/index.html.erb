@@ -1,4 +1,15 @@
-PUT WEB CAM THING HERE
+<% content_for('header') do -%>
+  <%= javascript_include_tag 'swfobject' %>
+  <%= javascript_include_tag 'express_install' %>
+<% end -%>
+
+<div id="webcam_capture">
+  
+</div>
+
+<script type="text/javascript">
+  <%= webcam_capture_js %>
+</script>
 
 <h3>Fake picture upload</h3>
 <% form_for(:picture, :url => pictures_path, :html => { :multipart => true }) do |f| %>
