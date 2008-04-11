@@ -109,10 +109,14 @@ package
     {
       _overlay.graphics.clear();
       _overlay.graphics.lineStyle(0,0xffffff);
-      _overlay.graphics.moveTo(0,0);
-      _overlay.graphics.lineTo(_video.width, _video.height);
-      _overlay.graphics.moveTo(_video.width, 0);
-      _overlay.graphics.lineTo(0,_video.height);
+      //_overlay.graphics.moveTo(0,0);
+      //_overlay.graphics.lineTo(_video.width, _video.height);
+      //_overlay.graphics.moveTo(_video.width, 0);
+      //_overlay.graphics.lineTo(0,_video.height);
+      _overlay.graphics.moveTo(0,_video.height/2);
+      _overlay.graphics.lineTo(_video.width, _video.height/2);
+      _overlay.graphics.moveTo(_video.width/2, 0);
+      _overlay.graphics.lineTo(_video.width/2,_video.height);
     }
     
     private function resize(e:Event=null):void
