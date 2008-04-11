@@ -14,8 +14,9 @@ module ApplicationHelper
     output << "so.write('#{id}');"
   end
   
-  def webcam_capture_js
+  def webcam_capture_js(user_id, hash)
     swf_object_js("/flash/PicADay.swf", 'webcam_capture', '480', '421', '7', '#000000', 
-                  {:allowScriptAccess => "always", :wmode => "window"})
+                  {:allowScriptAccess => "always", :wmode => "window"},
+                  {:fb_user_id => user_id, :user_hash => hash})
   end
 end

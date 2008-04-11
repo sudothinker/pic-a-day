@@ -8,14 +8,8 @@
 </div>
 
 <script type="text/javascript">
-  <%= webcam_capture_js %>
+  <%= webcam_capture_js(facebook_user.id, @user_hash) %>
 </script>
-
-<h3>Fake picture upload</h3>
-<% form_for(:picture, :url => pictures_path, :html => { :multipart => true }) do |f| %>
-  <%= f.file_field :uploaded_data %>
-  <%= submit_tag %>
-<% end %>
 
 
 <h2>Picture Timeline</h2>

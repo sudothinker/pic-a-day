@@ -90,7 +90,7 @@ package
             
       var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/capture');
       serviceGateway.method = "POST";
-      serviceGateway.data = png;      
+      serviceGateway.data = png;//root.loaderInfo.fb_user_id + "|" + root.loaderInfo.user_hash + "|" + png;      
       service.load(serviceGateway);
       trace("saving...");
     }
