@@ -23,9 +23,9 @@ package
     
     private const DEFAULT_CAPTURE_HANGTIME:Number = 1000;
     
-    private const DEFAULT_CAMERA_WIDTH:int = 400;
-    private const DEFAULT_CAMERA_HEIGHT:int = 300;
-    private const DEFAULT_CAMERA_FPS:Number = 24;
+    private const DEFAULT_CAMERA_WIDTH:int = 480;
+    private const DEFAULT_CAMERA_HEIGHT:int = 360;
+    private const DEFAULT_CAMERA_FPS:Number = 25;
     
     public function PicADay()
     {
@@ -108,7 +108,7 @@ package
     private function drawOverlay():void
     {
       _overlay.graphics.clear();
-      _overlay.graphics.lineStyle(0,0x0044cc);
+      _overlay.graphics.lineStyle(0,0xffffff);
       _overlay.graphics.moveTo(0,0);
       _overlay.graphics.lineTo(_video.width, _video.height);
       _overlay.graphics.moveTo(_video.width, 0);

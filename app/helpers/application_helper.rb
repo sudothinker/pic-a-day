@@ -15,7 +15,7 @@ module ApplicationHelper
   end
   
   def webcam_capture_js
-    swf_object_js("/flash/PicADay.swf", 'webcam_capture', '480', '421', '7', '#000000', 
+    swf_object_js("/flash/PicADay.swf", 'webcam_capture', '480', '360', '7', '#000000', 
                   {:allowScriptAccess => "always", :wmode => "window"})
   end
 end
