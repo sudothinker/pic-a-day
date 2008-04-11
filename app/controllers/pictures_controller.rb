@@ -1,22 +1,25 @@
 require 'digest/sha1'
+require 'base64'
+
 class PicturesController < ApplicationController
   def index
     @pictures = Picture.find(:all)#facebook_user.pictures
-    @user_hash = Digest::SHA1.hexdigest("--id--OUR SECRET--") # replace with facebook_user.id
+    @user_hash = Digest::SHA1.hexdigest("--2--OUR SECRET--") # replace with facebook_user.id
   end
   
   def capture   
-    split = request.raw_post.split("|", 3)
+    fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
+    redirect_to home_url and return false unless user_hash == Digest::SHA1.hexdigest("--#{fb_user_id}--OUR SECRET--")
     
-    fb_user_id = split[0].to_i
-    user_hash = split[1]
-    
-    # verify_the_hash
-    return false unless user_hash == Digest::SHA1.hexdigest("--id--OUR SECRET--")
-    
-    File.open(RAILS_ROOT + '/public/image.png', "wb") do |f|
-      f << split[2]
+    filename = RAILS_ROOT + "/tmp/attachment_fu/#{fb_user_id}_temp.png"
+    File.open(filename, "wb") do |f|
+      f << Base64.decode64(encoded_png)
     end
+    
+    # Save the record
+    
+    File.rm(filename)
+    redirect_to home_url
   end
   
   def create

@@ -11,6 +11,7 @@ package
   import flash.utils.ByteArray;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
+  import com.dynamicflash.util.Base64;
   
   public class PicADay extends Sprite
   {
@@ -88,9 +89,12 @@ package
       var service:URLLoader = new URLLoader();
       service.dataFormat = "binary";
             
+      var fb_user_id:String = root.loaderInfo.parameters['fb_user_id']
+      var user_hash:String = root.loaderInfo.parameters['user_hash']
+            
       var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/capture');
       serviceGateway.method = "POST";
-      serviceGateway.data = png;//root.loaderInfo.fb_user_id + "|" + root.loaderInfo.user_hash + "|" + png;      
+      serviceGateway.data = fb_user_id + "|" + user_hash + "|" + Base64.encodeByteArray(png);
       service.load(serviceGateway);
       trace("saving...");
     }
@@ -109,10 +113,6 @@ package
     {
       _overlay.graphics.clear();
       _overlay.graphics.lineStyle(0,0xffffff);
-      //_overlay.graphics.moveTo(0,0);
-      //_overlay.graphics.lineTo(_video.width, _video.height);
-      //_overlay.graphics.moveTo(_video.width, 0);
-      //_overlay.graphics.lineTo(0,_video.height);
       _overlay.graphics.moveTo(0,_video.height/2);
       _overlay.graphics.lineTo(_video.width, _video.height/2);
       _overlay.graphics.moveTo(_video.width/2, 0);
