@@ -10,6 +10,7 @@ package
   import flash.utils.Timer;
   import flash.utils.ByteArray;
   import flash.net.URLLoader;
+  import flash.net.URLVariables;
   import flash.net.URLRequest;
   
   public class PicADay extends Sprite
@@ -87,9 +88,10 @@ package
       png.position = 0;
       var service:URLLoader = new URLLoader();
       service.dataFormat = "binary";
-      service.data = png;
-      var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/');
+            
+      var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/capture');
       serviceGateway.method = "POST";
+      serviceGateway.data = png;      
       service.load(serviceGateway);
       trace("saving...");
     }
