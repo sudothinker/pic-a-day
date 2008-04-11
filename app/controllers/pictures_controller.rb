@@ -3,7 +3,7 @@ require 'base64'
 
 class PicturesController < ApplicationController
   def index
-    @pictures = Picture.find_all_by_thumbnail('thumb')#facebook_user.pictures
+    @pictures = Picture.paginate_all_by_thumbnail('thumb', :page => params[:page], :per_page => 7)#facebook_user.pictures
     @user_hash = Digest::SHA1.hexdigest("--2--OUR SECRET--") # replace with facebook_user.id
   end
   
