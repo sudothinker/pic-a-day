@@ -3,7 +3,7 @@ require 'base64'
 
 class PicturesController < ApplicationController
   def index
-    @pictures = Picture.find(:all)#facebook_user.pictures
+    @pictures = Picture.find_all_by_thumbnail('thumb')#facebook_user.pictures
     @user_hash = Digest::SHA1.hexdigest("--2--OUR SECRET--") # replace with facebook_user.id
   end
   
@@ -11,15 +11,9 @@ class PicturesController < ApplicationController
     fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
     redirect_to home_url and return false unless user_hash == Digest::SHA1.hexdigest("--#{fb_user_id}--OUR SECRET--")
     
-    filename = RAILS_ROOT + "/tmp/attachment_fu/#{fb_user_id}_temp.png"
-    File.open(filename, "wb") do |f|
-      f << Base64.decode64(encoded_png)
+    if Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
+      redirect_to home_url
     end
-    
-    # Save the record
-    
-    File.rm(filename)
-    redirect_to home_url
   end
   
   def create

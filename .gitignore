@@ -1,4 +1,5 @@
 .DS_Store
+*.sqlite3
 
 log/*.log
 log/*.pid
