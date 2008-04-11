@@ -7,6 +7,7 @@ Requires the sqlite and S3 gem
  * sudo gem install sqlite3-ruby
   *  http://amazon.rubyforge.org/
  * sudo gem install aws-s3
+ * On Mac OS X, sqlite3 version must be >= 3.3
 
 Requires an Amazon S3 account
 

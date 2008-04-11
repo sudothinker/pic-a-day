@@ -19,11 +19,7 @@ describe "misc specs" do
   
   end
 
-  it "should store the pictures inside a directory named after the user's unique id" do
-  
-  end
-
-  it "should name the pictures in the format of 'month_day_year_dimensions.jpg' (ex: 4_8_2008_480x360.jpg for a 480x360 picture taken on April 8, 2008)" do
+  it "should name the pictures in the format of 'facebook_user_id_month_day_year_dimensions.jpg' (ex: 23423_4_8_2008_480x360.jpg for a 480x360 picture taken on April 8, 2008 for user 23423)" do
   
   end
 

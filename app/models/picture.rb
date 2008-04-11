@@ -1,5 +1,6 @@
 class Picture < ActiveRecord::Base
-  has_attachment :storage => :s3, :content_type => :image, 
+  has_attachment :storage => :s3,
+                 :content_type => :image,
                  :s3_access => :authenticated_read,
                  :thumbnails => {:thumb => '80x60', :profile => '360x270'}
   validates_as_attachment      
@@ -14,9 +15,9 @@ class Picture < ActiveRecord::Base
     p = self.new
     p.fb_user_id = fb_user_id
     p.content_type = 'image/png'
-    p.filename = "#{Time.now.to_i}.png"
+    p.filename = "#{fb_user_id}_#{Date.today.strftime('%m_%d_%Y')}.png"
     p.temp_data=File.read(filename)
     File.delete(filename)
     return p.save
-  end           
+  end
 end
