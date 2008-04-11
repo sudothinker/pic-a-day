@@ -10,7 +10,6 @@ package
   import flash.utils.Timer;
   import flash.utils.ByteArray;
   import flash.net.URLLoader;
-  import flash.net.URLVariables;
   import flash.net.URLRequest;
   
   public class PicADay extends Sprite
