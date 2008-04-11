@@ -39,19 +39,26 @@
     .clearfix {display: block;}
     /* End hide from IE-mac */
     
-    div.container { width:646px; background:#fff; padding:15px; }
+    div.container { width:616px; background:#fff; padding:15px; }
 
-    div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; padding-bottom:50px; margin-bottom:10px; border:1px solid #888; }
-    div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #c3c3c3; border-top:1px solid #aaa; border-right:1px solid #aaa; }
+    div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; padding-bottom:50px; margin-bottom:15px; border:1px solid #666; }
+    div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #aaa; }
 
-	  div.pictures ul { width:100%; background:#aaa; border:1px solid #888; }
-	  div.pictures li a { padding:3px; background:#fafafa; border:1px solid #777; display:block; float:left; margin:2px; }
-	  div.pictures li a img { border-bottom:1px solid #fff; display:block; }
-	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; font-weight:bold; }
-    div.pictures li a:hover { border-color:#000; }
+	  div.pictures ul { background:#aaa; border:1px solid #666; padding:2px; width:540px; float:left; height:93px; }
+	  div.pictures li a { padding:3px; background:#fafafa; border:1px solid #777; display:block; float:left; margin:1px; }
+	  div.pictures li a img { display:block; margin-bottom:3px; }
+	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; }
+    div.pictures li a:hover { border-color:#000; background:#fff; }
     
-    div.pictures a.next { background-color:#ccc; }
-    div.pictures a.previous { background-color:#ccc; }
+    /* Selected Picture */
+    div.pictures li.selected a { border-color:#000; background-color:#ddd; }
+    div.pictures li.selected small { color:#000; }
+    
+    /* Next / Previous */
+    div.pictures a.arrow { background-color:#ddd; width:34px; height:100%; display:block; border:1px solid #666; float:left; height:97px; }
+    div.pictures a.next { border-left:none; }
+    div.pictures a.previous { border-right:none; }
+    div.pictures a.arrow:hover { background-color:#fff; }
 	</style>
 	
 </head>
@@ -67,17 +74,11 @@
     </div>
     
     
-    <div class="pictures">
-      <a href="#" class="previous">Previous</a>
-      <a href="#" class="next">Next</a>
-    
+    <div class="pictures clearfix">
+      <a href="#" class="previous arrow"></a>
+      
       <ul class="clearfix">
-        <li>
-          <a href="#">
-            <img src="images/80x60.gif" />
-            <small>4/12/07</small>
-          </a>
-        </li>
+
         <li>
           <a href="#">
             <img src="images/80x60.gif" />
@@ -99,16 +100,18 @@
         <li>
           <a href="#">
             <img src="images/80x60.gif" />
-            <small>4/12/07</small>
+            <small>4/16/07</small>
           </a>
         </li>
-        <li>
+        <li class="selected">
           <a href="#">
             <img src="images/80x60.gif" />
-            <small>4/12/07</small>
+            <small>4/17/07</small>
           </a>
         </li>
       </ul>
+      
+      <a href="#" class="next arrow"></a>
     </div>
   
 </div>  
