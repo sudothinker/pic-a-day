@@ -3,12 +3,10 @@
   <%= javascript_include_tag 'express_install' %>
 <% end -%>
 
-<div id="webcam_capture">
-  
-</div>
+<div id="webcam_capture"></div>
 
 <script type="text/javascript">
-  <%= webcam_capture_js(2, @user_hash) %>
+  <%= webcam_capture_js(1234, @user_hash) %>
 </script>
 
 <h2>Picture Timeline</h2>
