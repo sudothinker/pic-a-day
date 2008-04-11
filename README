@@ -1,5 +1,3 @@
-== Welcome to Pic A Day
+== Required Gems
 
-Kick ass app
-
-really testing lighthouse integration
+ * sudo gem i aws-s3 # http://amazon.rubyforge.org/
