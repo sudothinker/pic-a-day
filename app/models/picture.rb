@@ -15,7 +15,7 @@ class Picture < ActiveRecord::Base
     p = self.new
     p.fb_user_id = fb_user_id
     p.content_type = 'image/png'
-    p.filename = "#{Time.now.to_i}.png" # eventually, use this format "#{fb_user_id}_#{Date.today.strftime('%m_%d_%Y')}.png"
+    p.filename = "#{fb_user_id}_#{Date.today.strftime('%m_%d_%Y')}.png"
     p.temp_data=File.read(filename)
     File.delete(filename)
     return p.save
