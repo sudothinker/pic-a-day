@@ -3,3 +3,16 @@
 Kick ass app
 
 really testing lighthouse integration
+
+
+= Installing
+
+Requires the sqlite and S3 gem
+
+* sudo gem install sqlite3-ruby
+* sudo gem install aws-s3
+
+Requires an Amazon S3 account
+
+* Sign up at http://aws.amazon.com/s3
+* Store your S3 credentials in config/amazon_s3.yml
