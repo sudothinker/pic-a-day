@@ -58,11 +58,14 @@
     
     /* Pagination */
     div.pictures { position:relative; }
-    div.pictures div.pagination .next_page, div.pictures div.pagination .prev_page { position:absolute; height:97px; top:0; display:block; border:1px solid #666; background-color:#ddd; width:34px; }
-    div.pictures div.pagination .next_page { right:0; border-left:none; }
-    div.pictures div.pagination .prev_page { left:0; border-right:none; }
+    div.pictures div.pagination .next_page, div.pictures div.pagination .prev_page { position:absolute; height:97px; top:0; display:block; border:1px solid #666; width:34px; }
+    div.pictures div.pagination .next_page { right:0; border-left:none; background:#ddd url(../images/next.gif) 50% 50% no-repeat; }
+    div.pictures div.pagination .prev_page { left:0; border-right:none; background:#ddd url(../images/prev.gif) 50% 50% no-repeat; }
     div.pictures div.pagination a:hover { background-color:#fff; }
     div.pictures div.pagination span.label { display:none; }
+    div.pictures div.pagination .disabled { background-color:#dadada; }
+    div.pictures div.pagination .next_page.disabled { background-image:url(../images/next-disabled.gif); }
+    div.pictures div.pagination .prev_page.disabled { background-image:url(../images/prev-disabled.gif); }
 	</style>
 	
 </head>
