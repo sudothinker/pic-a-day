@@ -5,8 +5,8 @@ class PicturesController < ApplicationController
   before_filter :find_picture_strip
     
   def index
-    last_picture = Picture.find(:first, :conditions => "thumbnail IS NULL", :order => "id DESC")
-    redirect_to picture_path(last_picture) if last_picture.created_at >= Time.now - 1.day
+    @last_picture = Picture.find(:first, :conditions => "thumbnail IS NULL", :order => "id DESC")
+    redirect_to picture_path(@last_picture) if @last_picture && @last_picture.created_at >= Time.now - 1.day
     @user_hash = Facebooker::User.generate_hash(1234)# replace with User.generate_hash(facebook_user.id)
   end
   
@@ -23,6 +23,12 @@ class PicturesController < ApplicationController
       #end
       redirect_to home_url
     end
+  end
+  
+  def destroy
+    @picture = Picture.find(params[:id])
+    @picture.destroy
+    redirect_to home_url
   end
   
   protected

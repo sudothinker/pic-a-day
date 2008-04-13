@@ -19,4 +19,12 @@ module ApplicationHelper
                   {:allowScriptAccess => "always", :wmode => "window"},
                   {:fb_user_id => user_id, :user_hash => hash})
   end
+  
+  def render_instructions
+    render :partial => "shared/instructions"
+  end
+  
+  def render_pictures(pictures)
+    render :partial => "pictures", :locals => {:pictures => pictures}
+  end
 end

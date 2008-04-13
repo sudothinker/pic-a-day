@@ -1,5 +1,6 @@
-<div class="frame-container">
-  <div id="picture-frame"><%= image_tag(@picture.authenticated_s3_url) %></div>
-</div>
+<% render :layout => "frame" do %>
+  <%= image_tag(@picture.authenticated_s3_url) %>
+  <%= link_to "Delete", picture_path(@picture), :method => :delete %>
+<% end %>
 
-<%= render :partial => "pictures", :locals => {:pictures => @pictures} %>
+<%= render_pictures @pictures %>
