@@ -4,4 +4,3 @@
 log/*.log
 log/*.pid
 config/amazon_s3.yml
-config/database.yml
