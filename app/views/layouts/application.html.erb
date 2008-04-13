@@ -44,22 +44,24 @@
     div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; padding-bottom:50px; margin-bottom:15px; border:1px solid #666; }
     div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #aaa; }
 
-	  div.pictures ul { background:#aaa; border:1px solid #666; padding:2px; width:540px; float:left; height:93px; }
+	  div.pictures ul { background-color:#aaa; border:1px solid #666; padding:2px; width:540px; float:left; height:93px; margin:0 35px; }
 	  div.pictures li { float:left; }
 	  div.pictures li a { padding:3px; background:#fafafa; border:1px solid #777; display:block; float:left; margin:1px; }
 	  div.pictures li a img { display:block; margin-bottom:3px; }
-	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; }
+	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; width:78px; }
     div.pictures li a:hover { border-color:#000; background:#fff; }
     
     /* Selected Picture */
-    div.pictures li.selected a { border-color:#000; background-color:#ddd; }
-    div.pictures li.selected small { color:#000; }
+    div.pictures li.selected a { border-color:#000; background-color:#ccc; }
+    div.pictures li.selected small { color:#000; font-weight:bold; }
     
-    /* Next / Previous */
-    div.pictures a.arrow { background-color:#ddd; width:34px; height:100%; display:block; border:1px solid #666; float:left; height:97px; }
-    div.pictures a.next { border-left:none; }
-    div.pictures a.previous { border-right:none; }
-    div.pictures a.arrow:hover { background-color:#fff; }
+    /* Pagination */
+    div.pictures { position:relative; }
+    div.pictures div.pagination .next_page, div.pictures div.pagination .prev_page { position:absolute; height:97px; top:0; display:block; border:1px solid #666; background-color:#ddd; width:34px; }
+    div.pictures div.pagination .next_page { right:0; border-left:none; }
+    div.pictures div.pagination .prev_page { left:0; border-right:none; }
+    div.pictures div.pagination a:hover { background-color:#fff; }
+    div.pictures div.pagination span.label { display:none; }
 	</style>
 	
 </head>

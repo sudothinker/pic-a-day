@@ -1,13 +1,13 @@
 <div class="pictures clearfix" id="picture_strip">
-  <a href="#" class="previous arrow"></a>
   <ul class="clearfix">
     <% pictures.each do |p| %>
-      <li>
-        <%= link_to (image_tag(p.authenticated_s3_url) + content_tag(:small, p.created_at.strftime('%m/%d/%y'))), picture_path(p.parent)  %>
+      <li class="<%= 'selected' if @picture && p.parent_id == @picture.id %>">
+        <%= link_to (image_tag(p.authenticated_s3_url) + content_tag(:small, p.created_at.strftime("%m/%d/%y"))), picture_path(p.parent) %>
       </li>
     <% end %>
   </ul>
-  <a href="#" class="next arrow"></a>
-  <%= will_paginate pictures, :page_links => false %>
+  <%= will_paginate pictures,
+                    :page_links => false,
+                    :prev_label => content_tag(:span, "Previous", :class => "label"), 
+                    :next_label => content_tag(:span, "Next", :class => "label") %>
 </div>
-
