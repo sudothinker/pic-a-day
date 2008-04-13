@@ -3,7 +3,7 @@
   <ul class="clearfix">
     <% pictures.each do |p| %>
       <li>
-        <%= link_to (image_tag(p.authenticated_s3_url) + content_tag(:small, p.created_at.strftime('%m/%d/%y'))), picture_path(p.parent)  %>
+        <%= link_to (image_tag(p.authenticated_s3_url) + content_tag(:small, p.created_at.strftime('%m/%d/%y'))), picture_path(p.parent, :page => params[:page])  %>
       </li>
     <% end %>
   </ul>
