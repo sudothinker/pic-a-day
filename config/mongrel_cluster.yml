@@ -1,5 +1,5 @@
 --- 
-cwd: /home/mik/www/sudothinker/current
+cwd: /home/mik/www/apicaday/current
 log_file: log/mongrel.log
 port: "8002"
 environment: production
