@@ -3,16 +3,12 @@
   <%= javascript_include_tag 'express_install' %>
 <% end -%>
 
-<div id="webcam_capture"></div>
+<div class="frame-container">
+  <div id="picture-frame"><div id="webcam_capture"></div></div>
+</div>
 
 <script type="text/javascript">
   <%= webcam_capture_js(1234, @user_hash) %>
 </script>
 
-<h2>Picture Timeline</h2>
-
-<% @pictures.each do |p| %>
-  <%= image_tag(p.authenticated_s3_url) %>
-<% end %>
-
-<%= will_paginate @pictures, :page_links => false %>
+<%= render :partial => "pictures", :locals => {:pictures => @pictures} %>

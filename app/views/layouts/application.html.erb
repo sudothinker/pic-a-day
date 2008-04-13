@@ -1,13 +1,70 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <%= yield :header %>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>A Pic A Day</title>
+	<%= yield :header %>
+	<style type="text/css" media="screen">
+	  body { font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:11px; margin:10px; background:#eee; }
+	  
+    img { border:none; }
+
+    dt, dl, dd { margin:0; padding:0; }
+    ul, li { margin:0; padding:0; list-style:none; }
+
+    a { text-decoration:none; }
+    a:link { color:#3b5298; }
+    a:visited { color:#3b5298; }
+    a:hover { color:#3b5298; text-decoration:none; }
+    a:active { color:#3b5298; }
+
+    small { font-size:10px; }
+    
+    h1, h2, h3, h4, h5 { margin:0; padding:0; }
+    
+    /* Hack */
+    .clearfix:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+    .clearfix {display: inline-block;}
+    /* Hides from IE-mac \*/
+    * html .clearfix {height: 1%;}
+    .clearfix {display: block;}
+    /* End hide from IE-mac */
+    
+    div.container { width:616px; background:#fff; padding:15px; }
+
+    div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; padding-bottom:50px; margin-bottom:15px; border:1px solid #666; }
+    div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #aaa; }
+
+	  div.pictures ul { background:#aaa; border:1px solid #666; padding:2px; width:540px; float:left; height:93px; }
+	  div.pictures li { float:left; }
+	  div.pictures li a { padding:3px; background:#fafafa; border:1px solid #777; display:block; float:left; margin:1px; }
+	  div.pictures li a img { display:block; margin-bottom:3px; }
+	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; }
+    div.pictures li a:hover { border-color:#000; background:#fff; }
+    
+    /* Selected Picture */
+    div.pictures li.selected a { border-color:#000; background-color:#ddd; }
+    div.pictures li.selected small { color:#000; }
+    
+    /* Next / Previous */
+    div.pictures a.arrow { background-color:#ddd; width:34px; height:100%; display:block; border:1px solid #666; float:left; height:97px; }
+    div.pictures a.next { border-left:none; }
+    div.pictures a.previous { border-right:none; }
+    div.pictures a.arrow:hover { background-color:#fff; }
+	</style>
+	
 </head>
 
 <body>
-  <%= yield %>
+  <div class="container"><%= yield %></div>  
 </body>
 </html>

@@ -1,0 +1,5 @@
+<div class="frame-container">
+  <div id="picture-frame"><%= image_tag(@picture.authenticated_s3_url) %></div>
+</div>
+
+<%= render :partial => "pictures", :locals => {:pictures => @pictures} %>
