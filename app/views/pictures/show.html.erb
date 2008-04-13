@@ -1,5 +1,8 @@
 <% render :layout => "frame" do %>
   <%= image_tag(@picture.authenticated_s3_url) %>
+  
+  <div class="date"><%= @picture.taken_today? ? "Today" : @picture.created_at.strftime("%B %d, %Y") %></div>
+  
   <%= link_to "Delete", picture_path(@picture), :method => :delete, :confirm => "Are you sure you want to delete this picture?" %>
 <% end %>
 

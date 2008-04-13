@@ -23,6 +23,10 @@ class Picture < ActiveRecord::Base
     return p.save
   end
   
+  def taken_today?
+    created_at > Time.now - 1.day
+  end
+  
   protected
     def validates_one_picture_per_day
       last_pic = self.class.find(:first, :conditions => ['fb_user_id = ?', self.fb_user_id], :order => "id DESC")

@@ -22,3 +22,19 @@ describe Picture, "validates_one_picture_per_day" do
     @picture.should have(0).error_on(:fb_user_id)
   end
 end
+
+describe Picture, "taken_today?" do
+  before do
+    @picture = Picture.new
+  end
+  
+  it "should return true if taken today" do
+    @picture.stub!(:created_at).and_return(Time.now)
+    @picture.taken_today?.should == true
+  end
+  
+  it "should return false if not taken today" do
+    @picture.stub!(:created_at).and_return(Time.now - 1.day)
+    @picture.taken_today?.should == false
+  end
+end
