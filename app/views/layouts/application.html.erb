@@ -42,9 +42,17 @@
     
     div.container { width:616px; background:#fff; padding:15px; }
 
-    div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; padding-bottom:50px; margin-bottom:15px; border:1px solid #666; }
+    div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; height:410px; margin-bottom:15px; border:1px solid #666; }
     div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #aaa; }
+    
+    /* Picture Panel */
+    div.frame-container div.preview { height:360px; background-color:#000; }
+    div.frame-container div.panel { height:48px; width:480px; position:relative; }
+    div.frame-container div.panel div.date { font-size:18px; line-height:55px; text-align:center; }
+    div.frame-container div.panel div.options { position:absolute; right:0; bottom:0; }
+    div.frame-container div.panel div.options a.delete { font-size:10px; }
 
+    /* Carousel */
     div.pictures { position:relative; width:546px; margin:0 auto; padding:0 35px; }
 	  div.pictures ul { background-color:#aaa; border:1px solid #666; padding:2px; width:540px; float:left; height:93px; }
 	  div.pictures li { float:left; }
@@ -66,6 +74,7 @@
     div.pictures div.pagination .disabled { background-color:#dadada; }
     div.pictures div.pagination .next_page.disabled { background-image:url(../images/next-disabled.gif); }
     div.pictures div.pagination .prev_page.disabled { background-image:url(../images/prev-disabled.gif); }
+    
 	</style>
 	
 </head>

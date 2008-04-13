@@ -4,7 +4,7 @@
 <% end -%>
 
 <% render :layout => "frame" do %>
-  <div id="webcam_capture"></div>
+  <div class="preview" id="webcam_capture"></div>
   <script type="text/javascript">
     <%= webcam_capture_js(1234, @user_hash) %>
   </script>
