@@ -3,12 +3,10 @@
   <%= javascript_include_tag 'express_install' %>
 <% end -%>
 
-<div class="frame-container">
-  <div id="picture-frame"><div id="webcam_capture"></div></div>
-</div>
-
-<script type="text/javascript">
-  <%= webcam_capture_js(1234, @user_hash) %>
-</script>
-
-<%= render :partial => "pictures", :locals => {:pictures => @pictures} %>
+<% render :layout => "frame" do %>
+  <div id="webcam_capture"></div>
+  <script type="text/javascript">
+    <%= webcam_capture_js(1234, @user_hash) %>
+  </script>
+<% end %>
+<%= render_pictures @pictures %>
