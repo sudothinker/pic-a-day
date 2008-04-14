@@ -24,7 +24,7 @@ set :deploy_via, :remote_cache
 set :runner, user
 
 after "deploy:symlink", "sudothinker_symlink_configs"
-after "deploy", "deploy:migrate", "reload_mongrel", "reload_nginx", "deploy:cleanup"
+after "deploy", "reload_mongrel", "reload_nginx", "deploy:cleanup"
 
 desc "Reload Mongrels"
 task :reload_mongrel do
