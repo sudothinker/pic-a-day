@@ -27,4 +27,5 @@ module ApplicationHelper
   def render_pictures(pictures)
     render :partial => "pictures", :locals => {:pictures => pictures}
   end
+  
 end
