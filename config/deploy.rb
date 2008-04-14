@@ -45,6 +45,6 @@ end
 task :sudothinker_symlink_configs, :roles => :app, :except => {:no_release => true, :no_symlink => true} do
   run <<-CMD
     ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml
-    ln -nfs #{shared_path}/config/amazon_s3.yml #{release_path}/config/amazon_s3.yml
+    cp #{shared_path}/config/amazon_s3.yml #{release_path}/config/amazon_s3.yml
   CMD
 end
