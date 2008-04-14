@@ -9,7 +9,7 @@
 	<%= yield :header %>
 	<%= javascript_include_tag :defaults %>
 	<style type="text/css" media="screen">
-	  body { font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:11px; margin:10px; background:#eee; }
+	  body { font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:11px; }
 	  
     img { border:none; }
 
@@ -40,13 +40,13 @@
     .clearfix {display: block;}
     /* End hide from IE-mac */
     
-    div.container { width:616px; background:#fff; padding:15px; }
+    div.container { width:626px; background:#fff; }
 
     div.frame-container { background:#ddd; width:482px; text-align:center; margin:0 auto; padding:7px; height:410px; margin-bottom:15px; border:1px solid #666; }
-    div#picture-frame { width:480px; height:360px; background:#fff; text-align:center; margin:0 auto; border:1px solid #aaa; }
+    div#picture-frame { /*width:480px; height:360px; */ text-align:center; margin:0 auto; }
     
     /* Picture Panel */
-    div.frame-container div.preview { height:360px; background-color:#000; }
+    div.frame-container div.preview { width:480px; height:360px;  border:1px solid #aaa; }
     div.frame-container div.panel { height:48px; width:480px; position:relative; }
     div.frame-container div.panel div.date { font-size:17px; line-height:55px; text-align:center; }
     div.frame-container div.panel div.options {  }
@@ -59,7 +59,7 @@
 	  div.pictures li { float:left; }
 	  div.pictures li a { padding:3px; background:#fafafa; border:1px solid #777; display:block; float:left; margin:1px; _display:inline; }
 	  div.pictures li a img { display:block; margin-bottom:3px; }
-	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; }
+	  div.pictures li a small { display:block; text-align:center; padding:4px 1px; color:#666; width:78px; }
     div.pictures li a:hover { border-color:#000; background:#fff; }
     
     /* Selected Picture */
