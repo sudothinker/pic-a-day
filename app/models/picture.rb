@@ -27,7 +27,6 @@ class Picture < ActiveRecord::Base
     created_at.to_date == Date.today
   end
   
-  
   def self.already_taken_today?(fb_user_id)
     last_pic = find(:first, :conditions => ['fb_user_id = ?', fb_user_id], :order => 'id DESC')
     !last_pic.blank? && (last_pic.created_at.to_date == Date.today)

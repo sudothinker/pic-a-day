@@ -4,7 +4,7 @@
   <div class="panel">
     <div class="date"><%= @picture.taken_today? ? "Today" : @picture.created_at.strftime("%B %d, %Y") %></div>
     <div class="options">
-      <% if Picture.already_taken_today?(facebook_user.id) %>
+      <% unless Picture.already_taken_today?(facebook_user.id) %>
         <%= link_to "&#171; Go to Camera", home_url, :class => "switch" %> 
       <% end %>
       
