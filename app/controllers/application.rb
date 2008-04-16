@@ -13,10 +13,5 @@ class ApplicationController < ActionController::Base
   helper_method :facebook_user
   def facebook_user
     @facebook_user ||= (session[:facebook_session] && session[:facebook_session].user) || :false
-  end
-  
-  helper_method :facebook_url_for
-  def facebook_url_for(url_hash={})
-    home_url.chop + url_for(:controller => url_hash[:controller], :action => url_hash[:action], :id => url_hash[:id], :only_path => true, :skip_relative_url_root => true)
-  end
+  end  
 end

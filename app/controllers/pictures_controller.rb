@@ -7,8 +7,8 @@ class PicturesController < ApplicationController
   skip_before_filter :ensure_application_is_installed_by_facebook_user, :ensure_authenticated_to_facebook, :only => :capture
   
   def index
-    @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")
-    redirect_to facebook_url_for(:controller => 'pictures', :action => 'show', :id => @last_picture.id) if @last_picture && @last_picture.taken_today?
+    @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
+    redirect_to url_for(params.merge(:action => 'show', :id => @last_picture.id)) if @last_picture && @last_picture.taken_today?
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
   end
   
