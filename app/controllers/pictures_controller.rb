@@ -8,7 +8,7 @@ class PicturesController < ApplicationController
   
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")
-    redirect_to picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
+    redirect_to show_picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
   end
   
