@@ -4,7 +4,8 @@ ActionController::Routing::Routes.draw do |map|
     f.capture '/capture', :action => "capture"
   end
   
-  map.resources :pictures
+  map.facebook_resources :pictures
+  
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
