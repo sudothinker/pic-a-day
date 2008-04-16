@@ -35,7 +35,7 @@ class Picture < ActiveRecord::Base
   protected
     def validates_one_picture_per_day
       last_pic = self.class.find(:first, :conditions => ['fb_user_id = ?', self.fb_user_id], :order => "id DESC")
-      self.errors.add(:fb_user_id, 'Only one picture allowed per day') if !last_pic.nil? && last_pic.created_at.to_date == Date.today
+      self.errors.add(:fb_user_id, 'Only one picture allowed per day') if !last_pic.nil? && last_pic.taken_today?
       return self.errors.empty?
     end
 end
