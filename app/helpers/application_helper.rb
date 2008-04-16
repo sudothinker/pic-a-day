@@ -1,9 +1,5 @@
 # Methods added to this helper will be available to all templates in the application.
-module ApplicationHelper
-  def facebook_url_for(url_hash={})
-    home_url.chop + url_for(:controller => url_hash[:controller], :action => url_hash[:action], :id => url_hash[:id], :only_path => true, :skip_relative_url_root => true)
-  end
-  
+module ApplicationHelper  
   def swf_object_js(swf, id, width, height, flash_version, background_color, params = {}, vars = {})
     output = "var so = new SWFObject('#{swf}', '#{id}_swf', '#{width}', '#{height}', '#{flash_version}', '#{background_color}');"
     params.each  {|key, value| output << "so.addParam('#{key}', '#{value}');"}
