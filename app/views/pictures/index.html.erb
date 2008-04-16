@@ -6,7 +6,7 @@
 <% render :layout => "frame" do %>
   <div class="preview" id="webcam_capture"></div>
   <script type="text/javascript">
-    <%= webcam_capture_js(1234, @user_hash) %>
+    <%= webcam_capture_js(facebook_user.id, @user_hash) %>
   </script>
 <% end %>
 <%= render_pictures @pictures %>
