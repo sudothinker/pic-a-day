@@ -25,7 +25,7 @@ class PicturesController < ApplicationController
   
   def destroy
     @picture.destroy
-    redirect_to home_url
+    redirect_to url_for(params.merge(:action => 'index', :id => nil))
   end
   
   protected
