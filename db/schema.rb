@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 2) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "pictures", :force => true do |t|
     t.integer  "fb_user_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 2) do
     t.integer  "width"
     t.integer  "parent_id"
     t.string   "thumbnail"
+    t.datetime "deleted_at"
   end
 
 end

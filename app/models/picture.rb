@@ -7,6 +7,8 @@ class Picture < ActiveRecord::Base
   
   validate :validates_one_picture_per_day
   
+  acts_as_paranoid
+  
   def self.create_from_png_data_and_fb_user_id(png_data, fb_user_id)
     filename = RAILS_ROOT + "/tmp/attachment_fu/#{fb_user_id}_temp.png"
     File.open(filename, "wb") do |f|

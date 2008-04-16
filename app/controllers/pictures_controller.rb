@@ -3,6 +3,7 @@ class PicturesController < ApplicationController
   # Suppresses image binary data from logger, Perhaps slice! would be faster
   filter_parameter_logging { |k,v| k.gsub!(/./, "") if k =~ /\|/i } 
   before_filter :find_picture_strip
+  before_filter :find_live_picture, :only => [:show, :destroy]
     
   def index
     @last_picture = Picture.find(:first, :conditions => "thumbnail IS NULL", :order => "id DESC")
@@ -11,7 +12,6 @@ class PicturesController < ApplicationController
   end
   
   def show
-    @picture = Picture.find(params[:id])
   end
   
   def capture
@@ -26,7 +26,6 @@ class PicturesController < ApplicationController
   end
   
   def destroy
-    @picture = Picture.find(params[:id])
     @picture.destroy
     redirect_to home_url
   end
@@ -34,5 +33,10 @@ class PicturesController < ApplicationController
   protected
     def find_picture_strip
       @pictures = Picture.paginate_all_by_thumbnail('thumb', :page => params[:page], :per_page => 6, :order => "id DESC")#and_fb_user_id
+    end
+    
+    def find_live_picture
+      @picture = Picture.find(params[:id])
+      redirect_to home_url and return false if @picture.nil?
     end
 end
