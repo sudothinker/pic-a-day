@@ -21,7 +21,7 @@ module ApplicationHelper
   end
   
   def render_instructions
-    render :partial => "shared/instructions"
+    render :partial => "instructions"
   end
   
   def render_pictures(pictures)

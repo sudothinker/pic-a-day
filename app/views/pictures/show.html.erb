@@ -5,10 +5,10 @@
     <div class="date"><%= @picture.taken_today? ? "Today" : @picture.created_at.strftime("%B %d, %Y") %></div>
     <div class="options">
       <% unless Picture.already_taken_today?(facebook_user.id) %>
-        <%= link_to "&#171; Go to Camera", home_url, :class => "switch" %> 
+        <%= link_to "&#171; Go to Camera", params.merge(:action => 'index'), :class => "switch" %> 
       <% end %>
       
-      <%= link_to "Delete Picture#{' / Retake' if @picture.taken_today?}", picture_path(@picture), :class => "delete", :method => :delete, :confirm => "Are you sure you want to delete this picture?" %>
+      <%= link_to "Delete Picture#{' / Retake' if @picture.taken_today?}", params.merge(:action => 'destroy', :id => @picture.id), :class => "delete", :confirm => "Are you sure you want to delete this picture?" %>
     </div>
   </div>
 <% end %>
