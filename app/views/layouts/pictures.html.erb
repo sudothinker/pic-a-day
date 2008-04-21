@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+	<title>A Pic A Day</title>
+	<%= yield :header %>
+	<%= javascript_include_tag :defaults %>
+	<style type="text/css" media="screen">
+	  body { font-family:"lucida grande",tahoma,verdana,arial,sans-serif; font-size:11px; }
+	  
+    img { border:none; }
+
+    dt, dl, dd { margin:0; padding:0; }
+    ul, li { margin:0; padding:0; list-style:none; }
+
+    a { text-decoration:none; }
+    a:link { color:#526ea7; }
+    a:visited { color:#526ea7; }
+    a:hover { color:#526ea7; text-decoration:underline; }
+    a:active { color:#526ea7; }
+    
+    h1, h2, h3, h4, h5 { margin:0; padding:0; }
+    
+    /* Hack */
+    .clearfix:after { content:"."; display:block; height:0; clear:both; visibility:hidden; }
+    .clearfix {display:inline-block;}
+    /* Hides from IE-mac \*/
+    * html .clearfix {height:1%;}
+    .clearfix {display:block;}
+    /* End hide from IE-mac */
+    
+    div.container { width:646px; background-color:#f9f9f9; padding:20px 0 0 0; }
+    
+    /* total dimensions = 504x444 */
+    #picture-frame { height:420px; width:480px; background-color:#e4e4e4; text-align:center; margin:0 auto 20px auto; padding:12px; }
+    #picture-frame div.preview { height:360px; width:480px; }
+    
+    /* panel */
+    #picture-frame div.panel { height:60px; width:480px; position:relative; }
+    #picture-frame div.panel div.about { font-size:15px; text-align:left; line-height:60px; color:#666; text-align:center; font-weight:bold; }
+    #picture-frame div.panel div.options a { position:absolute; }
+    #picture-frame div.panel div.options a.back { left:0; bottom:0; }
+    #picture-frame div.panel div.options a.delete { right:0; bottom:0; }
+    
+    /* carousel */
+    #picture-carousel { width:612px; padding:0 17px 15px 17px; }
+    #picture-carousel dl { border:1px solid #d5d5d5; background-color:#fff; width:80px; padding:6px; float:left; color:#777; margin:0 4px; }
+    #picture-carousel dl:hover, #picture-carousel dl.selected { border-color:#526ea7; color:#000; }
+    #picture-carousel dl.picture dd.thumb { height:60px; width:80px; margin-bottom:6px; }
+    #picture-carousel dl.picture dt.desc { font-size:10px; text-align:center; }
+    
+    /* footer = text + pagination */    
+    div.footer { clear:both; background:#fff; width:626px; padding:10px; border-top:1px solid #d6d6d6; }
+    div.footer div.instructions { float:left; width:355px; font-size:10px; color:#888; }
+    div.footer div.pagination { text-align:right; float:right; color:#888; }
+    div.footer div.pagination a { font-weight:bold; padding:4px; }
+    div.footer div.pagination a:hover { background-color:#526ea7; color:#fff; text-decoration:none; }
+    div.footer div.pagination .next_page { margin-left:10px; }
+    
+	</style>
+	
+</head>
+
+<body>
+  <%= yield %>
+</body>
+</html>
