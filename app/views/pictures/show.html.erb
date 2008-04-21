@@ -1,16 +1,16 @@
 <% render :layout => "frame" do %>
-  <div class="preview"><%= image_tag(@picture.authenticated_s3_url) %></div>
-  
-  <div class="panel">
-    <div class="date"><%= @picture.taken_today? ? "Today" : @picture.created_at.strftime("%B %d, %Y") %></div>
-    <div class="options">
-      <% unless Picture.already_taken_today?(facebook_user.id) %>
-        <%= link_to "&#171; Go to Camera", params.merge(:action => 'index'), :class => "switch" %> 
-      <% end %>
-      
-      <%= link_to "Delete Picture#{' / Retake' if @picture.taken_today?}", params.merge(:action => 'destroy', :id => @picture.id), :class => "delete", :confirm => "Are you sure you want to delete this picture?" %>
+  <div id="picture-frame">
+    <div class="preview"><%= image_tag(@picture.authenticated_s3_url) %></div>
+    <div class="panel">
+      <div class="about"><%= @picture.created_at.strftime("%B %d, %Y") %></div>
+      <div class="options">
+        <% unless Picture.already_taken_today?(facebook_user.id) %>
+          <%= link_to("&#171; Go to Camera", params.merge(:action => 'index'), :class => "switch") %> 
+        <% end %>
+        <%= link_to "Delete", params.merge(:action => 'destroy', :id => @picture.id), :class => "delete", :confirm => "Are you sure you want to delete this picture? #{'You cannot retake it again.' unless @picture.taken_today?}" %>
+      </div>
     </div>
   </div>
+  
+  <%= render_pictures @pictures %>
 <% end %>
-
-<%= render_pictures @pictures %>

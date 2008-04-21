@@ -1,13 +1,11 @@
-<div class="pictures clearfix" id="picture_strip">
-  <ul class="clearfix">
+<% unless pictures.blank? %>
+  <div id="picture-carousel" class="clearfix">
     <% pictures.each do |p| %>
-      <li class="<%= 'selected' if @picture && p.parent_id == @picture.id %>">
-        <%= link_to (image_tag(p.authenticated_s3_url) + content_tag(:small, p.created_at.strftime('%m/%d/%y'))), params.merge(:action => 'show', :id => p.parent.id, :page => params[:page])  %>
-      </li>
+    <dl class="picture <%= 'selected' if @picture && p.parent_id == @picture.id %>">
+      <dd class="thumb"><%= link_to image_tag(p.authenticated_s3_url), params.merge(:action => 'show', :id => p.parent.id, :page => params[:page]) %></dd>
+      <dt class="desc"><%= p.created_at.strftime("%B %d, %Y") %></dt>
+    </dl>
     <% end %>
-  </ul>
-  <%= will_paginate pictures,
-                    :page_links => false,
-                    :prev_label => content_tag(:span, "Previous", :class => "label"), 
-                    :next_label => content_tag(:span, "Next", :class => "label") %>
-</div>
+  </div>
+  <% content_for(:pagination) { will_paginate pictures, :page_links => false } %>
+<% end %>

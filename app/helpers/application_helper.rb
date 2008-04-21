@@ -15,13 +15,9 @@ module ApplicationHelper
   end
   
   def webcam_capture_js(user_id, hash)
-    swf_object_js("/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", 'webcam_capture', '480', '360', '7', '#000000', 
+    swf_object_js("/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", 'picture-frame', '480', '420', '7', '#000000', 
                   {:allowScriptAccess => "always", :wmode => "window"},
                   {:fb_user_id => user_id, :user_hash => hash})
-  end
-  
-  def render_instructions
-    render :partial => "instructions"
   end
   
   def render_pictures(pictures)

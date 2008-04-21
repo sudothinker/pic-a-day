@@ -1,6 +1,8 @@
-<div class="frame-container">
-  <div id="picture-frame">
-    <%= yield %>
+<div class="container clearfix">
+  <%= yield %>
+  
+  <div class="footer clearfix">
+    <div class="instructions"><strong>Instructions:</strong> Take one picture of yourself each day, every day.</span></div>  
+    <%= yield :pagination %>
   </div>
 </div>
-<%= render_instructions %>
