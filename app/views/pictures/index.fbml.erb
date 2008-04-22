@@ -2,8 +2,7 @@
 <%= javascript_include_tag 'express_install' %>
 
 <% render :layout => "frame" do %>
-  
-  <fb:iframe src="http://pseudothinker.com/camera" width="480" height="420" />
+  <%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420) %>
   
   <%= render_pictures @pictures %>
 <% end %>
