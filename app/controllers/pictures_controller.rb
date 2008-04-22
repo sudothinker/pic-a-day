@@ -12,6 +12,10 @@ class PicturesController < ApplicationController
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
   end
   
+  def camera
+    @user_hash = Facebooker::User.generate_hash(facebook_user.id)
+  end
+  
   def show
   end
   
