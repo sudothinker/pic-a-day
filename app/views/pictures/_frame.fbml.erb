@@ -2,7 +2,14 @@
   <%= yield %>
   
   <div class="footer clearfix">
-    <div class="instructions"><strong>Instructions:</strong> Take one picture of yourself each day, every day.</span> <%= link_to "Invite your friends", invite_path %></div>  
+    <div class="share">
+      <%= link_to "Invite your friends", invite_path %>
+    </div>
+
     <%= yield :pagination %>
+    
+    <div class="instructions">
+      <strong>Instructions:</strong> Take one picture of yourself each day, every day.
+    </div>
   </div>
 </div>
