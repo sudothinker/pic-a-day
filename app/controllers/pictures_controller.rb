@@ -15,6 +15,9 @@ class PicturesController < ApplicationController
   def show
   end
   
+  def invite
+  end
+  
   def capture
     fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
     redirect_to home_path and return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
