@@ -1,6 +1,6 @@
 
 <% render :layout => "frame" do %>
-  <%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420) %>
+  <%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420, :flashvars => "fb_user_id=#{facebook_user.id}&user_hash=#{@user_hash}") %>
   
   <%= render_pictures @pictures %>
 <% end %>

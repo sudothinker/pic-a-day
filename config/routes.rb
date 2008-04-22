@@ -9,7 +9,6 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
-  map.camera '/camera', :controller => 'pictures', :action => 'camera'
   map.resources :pictures
   
   # Install the default routes as the lowest priority.
