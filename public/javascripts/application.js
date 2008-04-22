@@ -1,3 +1,4 @@
 function captureSaved() {
-  document.location = document.location;
+  console.log("Saved");
+  window.location = window.location;
 }
