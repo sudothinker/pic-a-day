@@ -3,11 +3,7 @@
 
 <% render :layout => "frame" do %>
   
-  <div id="picture-frame"></div>
-  
-  <script type="text/javascript">
-    <%= webcam_capture_js(facebook_user.id, @user_hash) %>
-  </script>
+  <%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420) %>
   
   <%= render_pictures @pictures %>
 <% end %>
