@@ -54,7 +54,10 @@
 
 	<script type="text/javascript" charset="utf-8">
 	 function captureSaved() {
+	   console.log("saved");
+	   console.log(window.location);
      window.location = '/redirector';
+     console.log(window.location);
    }
 	</script>
 	<%= yield %>
