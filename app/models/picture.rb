@@ -1,8 +1,9 @@
 class Picture < ActiveRecord::Base
+  THUMBNAILS = {:thumb => '80x60', :profile => '360x270'}
   has_attachment :storage => :s3,
                  :content_type => :image,
                  :s3_access => :authenticated_read,
-                 :thumbnails => {:thumb => '80x60', :profile => '360x270'}
+                 :thumbnails => THUMBNAILS
   validates_as_attachment      
   
   validate :validates_one_picture_per_day
@@ -23,6 +24,13 @@ class Picture < ActiveRecord::Base
     p.temp_data=File.read(filename)
     File.delete(filename)
     return p.save
+  end
+  
+  # REFACTOR: use aaa methods to do this.. 
+  THUMBNAILS.keys.each do |s|
+    define_method s do
+      thumbnails.find_by_thumbnail(s.to_s) || self
+    end
   end
   
   def taken_today?

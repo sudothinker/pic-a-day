@@ -33,7 +33,7 @@ class PicturesController < ApplicationController
   
   protected
     def find_picture_strip
-      @pictures = Picture.paginate_all_by_thumbnail_and_fb_user_id('thumb', facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
+      @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
     end
     
     def find_picture
