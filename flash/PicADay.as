@@ -234,7 +234,7 @@ package
     private function captureSaved(e:Event):void
     {
       trace("captureSaved");
-      if(ExternalInterface.available) ExternalInterface.call("captureSaved");
+      if(ExternalInterface.available) ExternalInterface.call("a11351932542_captureSaved");
       this.reset();
     }
     
