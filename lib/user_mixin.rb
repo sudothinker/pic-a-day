@@ -11,7 +11,12 @@ module Facebooker
       puts "Updating fbml for #{user_id}"
       parameters = {:uid => user_id}
       fbml = <<-FBML
-        <img src="#{picture.profile.authenticated_s3_url}" alt="Me" />
+        <div class="profile-container" style="width:360px; padding:10px 10px 20px 10px; background-color:#e4e4e4;">
+          <img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="width:360px; height:270px; margin-bottom:20px; display:block;" />
+          <div class="picture-info" style="font-size:14px; text-align:center;">
+            Taken today at <strong>#{picture.created_at.strftime('%I:%M%p')}</strong>
+          </div>
+        </div>
       FBML
       parameters[:profile] = fbml
       Session.current.post('facebook.profile.setFBML', parameters)
