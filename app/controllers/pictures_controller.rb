@@ -24,10 +24,9 @@ class PicturesController < ApplicationController
   
   def capture
     fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
-    redirect_to home_path and return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
-    if Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
-      redirect_to home_url
-    end
+    return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
+    picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
+    facebook_user.set_profile_fbml!(picture)
   end
   
   def destroy

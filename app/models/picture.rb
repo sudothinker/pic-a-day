@@ -28,7 +28,8 @@ class Picture < ActiveRecord::Base
     i.write(filename)
     p.temp_data=File.read(filename)
     File.delete(filename)
-    return p.save
+    p.save
+    return p
   end
   
   # REFACTOR: use aaa methods to do this.. 
