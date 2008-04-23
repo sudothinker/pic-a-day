@@ -23,7 +23,7 @@ class Picture < ActiveRecord::Base
     p.fb_user_id = fb_user_id
     p.content_type = 'image/png'
     p.filename = "#{fb_user_id}_#{Date.today.strftime('%m_%d_%Y')}.png"
-    i = Image.new(filename)
+    i = ImageList.new(filename)
     i.flop!
     i.write(filename)
     p.temp_data=File.read(filename)
