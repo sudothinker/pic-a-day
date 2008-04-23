@@ -4,10 +4,17 @@
     <div class="panel">
       <div class="about"><%= @picture.created_at.strftime("%B %d, %Y") %></div>
       <div class="options">
-        <% unless Picture.already_taken_today?(facebook_user.id) %>
-          <%= link_to("&#171; Go to Camera", home_path, :class => "switch") %> 
-        <% end %>
-        <%= link_to "Delete", destroy_picture_path(@picture), :class => "delete", :confirm => "Are you sure you want to delete this picture? #{'You cannot retake it again.' unless @picture.taken_today?}" %>
+        <%= link_to("&#171; Go to Camera", home_path, :class => "switch") unless Picture.already_taken_today?(facebook_user.id) %> 
+        
+        <fb:dialog id="delete_picture_dialog_<%= @picture.id %>" cancel_button=1>
+          <fb:dialog-title>Delete Picture</fb:dialog-title>
+          <fb:dialog-content>
+            Are you sure you want to delete this picture? <%= 'You cannot retake it again.' unless @picture.taken_today? %>
+          </fb:dialog-content>
+          <fb:dialog-button type="submit" value="Yes" href="<%= destroy_picture_path(@picture) %>" />
+        </fb:dialog>
+
+        <a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Click to delete">Delete</a>
       </div>
     </div>
   </div>
