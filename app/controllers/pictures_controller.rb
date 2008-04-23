@@ -26,7 +26,7 @@ class PicturesController < ApplicationController
     fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
     return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
     picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
-    set_profile_fbml!(fb_user_id, picture)
+    Facebooker::User.set_profile_fbml!(fb_user_id, picture)
   end
   
   def destroy
