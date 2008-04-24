@@ -30,6 +30,10 @@ class PicturesController < ApplicationController
   end
   
   def destroy
+    if @picture.taken_today?
+      last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL AND id < ?", facebook_user.id, @picture.id], :order => "id DESC")
+      Facebooker::User.set_profile_fbml!(facebook_user.id, last_picture) unless last_picture.nil?
+    end
     @picture.destroy
     redirect_to home_path
   end
