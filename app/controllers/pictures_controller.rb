@@ -40,7 +40,7 @@ class PicturesController < ApplicationController
     end
     
     def find_picture
-      @picture = Picture.find(params[:id])
+      @picture = Picture.find(params[:id], :conditions => "parent_id IS NULL")
       redirect_to home_url and return false if @picture.nil? || @picture.fb_user_id != facebook_user.id
     end
 end
