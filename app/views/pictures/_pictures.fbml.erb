@@ -1,7 +1,7 @@
 <% unless pictures.blank? %>
   <div id="picture-carousel" class="clearfix">
     <% pictures.each do |p| %>
-    <dl class="picture <%= 'selected' if @picture && p.parent_id == @picture.id %>">
+    <dl class="picture <%= 'selected' if p == picture %>">
       <dd class="thumb"><%= link_to image_tag(p.thumb.authenticated_s3_url), picture_path(p, :page => params[:page]) %></dd>
       <dt class="desc"><%= p.created_at.strftime("%B %d, %Y") %></dt>
     </dl>
