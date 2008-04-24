@@ -12,7 +12,7 @@ module Facebooker
       parameters = {:uid => user_id}
       fbml = <<-FBML
         <div class="profile-container" style="width:360px; padding:10px 10px 20px 10px; background-color:#e4e4e4;">
-          <a style="display:block" href="http://apps.facebook.com/apicaday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="width:360px; height:270px; margin-bottom:20px; display:block;" /></a>
+          <a style="display:block" href="http://apps.facebook.com/apicaday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="margin-bottom:20px; display:block;" /></a>
           <div class="picture-info" style="font-size:14px; text-align:center;">
             Taken #{picture.created_at.strftime('%B %d, %Y')} at #{picture.created_at.strftime('%I:%M%p')}
           </div>
