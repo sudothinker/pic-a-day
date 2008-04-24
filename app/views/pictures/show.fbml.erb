@@ -1,7 +1,5 @@
-<% render :layout => "frame" do %>
-  <div id="picture-frame">
-    <%= render :partial => "picture", :object => @picture %>
-  </div>
-  
-  <%= render_pictures @pictures %>
-<% end %>
+<div id="picture-frame">
+  <%= render :partial => "picture", :object => @picture %>
+</div>
+
+<%= render_pictures @pictures %>
