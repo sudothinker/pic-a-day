@@ -44,12 +44,11 @@
     
     /* footer = text + pagination */    
     div.footer { clear:both; background:#fff; width:626px; padding:10px; border-top:1px solid #d6d6d6; }
-    div.footer div.share { float:left; width:355px; }
+    div.footer div.instructions { float:left; width:355px; font-size:10px; color:#888; }
     div.footer div.pagination { text-align:right; float:right; color:#888; }
     div.footer div.pagination a { font-weight:bold; padding:4px; }
     div.footer div.pagination a:hover { background-color:#526ea7; color:#fff; text-decoration:none; }
     div.footer div.pagination .next_page { margin-left:10px; }
-    div.footer div.instructions { clear:both; margin-top:20px; text-align:center; font-size:10px; color:#888; }
 	</style>
 
 	<script type="text/javascript" charset="utf-8">
@@ -69,10 +68,9 @@
     <%= yield %>
 
     <div class="footer clearfix">
-      <%= yield :pagination %>
-
       <div class="instructions">
         <strong>Instructions:</strong> Take one picture of yourself each day, every day.
       </div>
+      <%= yield :pagination %>
     </div>
   </div>
