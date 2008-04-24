@@ -10,14 +10,18 @@ module Facebooker
     def self.set_profile_fbml!(user_id, picture)
       puts "Updating fbml for #{user_id}"
       parameters = {:uid => user_id}
-      fbml = <<-FBML
-        <div class="profile-container" style="width:360px; margin-left:40px; margin-right:40px; padding:10px 10px 20px 10px; background-color:#e4e4e4;">
-          <a style="display:block" href="http://apps.facebook.com/apicaday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="margin-bottom:20px; display:block;" /></a>
-          <div class="picture-info" style="font-size:14px; text-align:center;">
-            Taken #{picture.created_at.strftime('%B %d, %Y')} at #{picture.created_at.strftime('%I:%M%p')}
+      if picture.nil?
+        fbml = nil
+      else
+        fbml = <<-FBML
+          <div class="profile-container" style="width:360px; margin-left:40px; margin-right:40px; padding:10px 10px 20px 10px; background-color:#e4e4e4;">
+            <a style="display:block" href="http://apps.facebook.com/apicaday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="margin-bottom:20px; display:block;" /></a>
+            <div class="picture-info" style="font-size:14px; text-align:center;">
+              Taken #{picture.created_at.strftime('%B %d, %Y')} at #{picture.created_at.strftime('%I:%M%p')}
+            </div>
           </div>
-        </div>
-      FBML
+        FBML
+      end
       parameters[:profile] = fbml
       Session.current.post('facebook.profile.setFBML', parameters)
     end
