@@ -4,7 +4,7 @@
     <div class="panel">
       <div class="about"><%= @picture.created_at.strftime("%B %d, %Y") %></div>
       <div class="options">
-        <%= link_to("&#171; Go to Camera", home_path, :class => "switch") unless Picture.already_taken_today?(facebook_user.id) %> 
+        <%= link_to("&#171; Go to Camera", home_path, :class => "back") unless Picture.already_taken_today?(facebook_user.id) %> 
         
         <fb:dialog id="delete_picture_dialog_<%= @picture.id %>" cancel_button=1>
           <fb:dialog-title>Delete Picture</fb:dialog-title>
