@@ -7,5 +7,7 @@
     </dl>
     <% end %>
   </div>
-  <% content_for(:pagination) { will_paginate pictures, :page_links => false } %>
+  <% content_for(:pagination) do %>
+    <%= will_paginate pictures, :page_links => false %>
+  <% end %>
 <% end %>

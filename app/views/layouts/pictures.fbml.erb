@@ -59,4 +59,18 @@
      console.log(window.location);
    }
 	</script>
-	<%= yield %>
+	
+	<fb:tabs> 
+    <%= fb_tab_item "Invite", invite_path, :align => "right" %>
+  </fb:tabs>
+  
+  <div class="container clearfix">
+    <%= yield %>
+
+    <div class="footer clearfix">
+      <div class="instructions">
+        <strong>Instructions:</strong> Take one picture of yourself each day, every day.
+      </div>
+      <%= yield :pagination %>
+    </div>
+  </div>
