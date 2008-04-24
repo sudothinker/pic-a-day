@@ -62,7 +62,7 @@
 	</script>
 	
 	<fb:tabs> 
-    <%= fb_tab_item "Invite", invite_path, :align => "right" %>
+    <%= fb_tab_item "Invite", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
   
   <div class="container clearfix">
