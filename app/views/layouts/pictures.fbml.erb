@@ -59,7 +59,7 @@
 	</style>
 
   <script type="text/javascript" charset="utf-8">
-    setTimeout( "do_ajax()", 2*1000 );
+    setTimeout( do_ajax(), 2*1000 );
   </script>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
@@ -68,7 +68,8 @@
   	  ajax.ondone = function(data) { 
   	    if (data == 'SUCCESS') {
   	      document.getElementById('ajax1').setTextValue('SUCCESS');
-  	      console.log(window.location.pathname);
+  	      document.getElementById('ajax2').setTextValue(window.location.pathname);
+  	      document.getElementById('ajax3').setTextValue(unescape(window.location.pathname));
   	      window.location.href = unescape(window.location.pathname);
           
   	    } else {
@@ -84,7 +85,9 @@
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
   
-  <span id="ajax1"></span>
+  <span id="ajax1"></span><span id="ajax2"></span>
+  <span id="ajax3"></span>
+  
   
   <div class="container clearfix">
     <%= yield %>
