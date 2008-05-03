@@ -62,14 +62,9 @@
   	function do_ajax(latest_id) { 
       var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
-  	  ajax.ondone = function(data) { 
-  	    document.getElementById('ajax1').setTextValue('working');
-	      document.getElementById('ajax2').setTextValue(window.location.href);
-	      
-  	    if (data == 'SUCCESS') {
-  	      window.location.href = window.location.href;
-  	      history.go(0);
-          window.location.reload(true);
+  	  ajax.ondone = function(data) { 	      
+  	    if (data != 'FAIL') {
+  	      document.getElementById('picture-frame').setTextValue(data);
   	    }
   	  } 
   	  var queryParams = { "id" : latest_id };
@@ -81,8 +76,6 @@
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
-  
-  <span id="ajax1"></span><span id="ajax2"></span>
   
   <div class="container clearfix">
     <%= yield %>
