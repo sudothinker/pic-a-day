@@ -64,12 +64,14 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-  	      document.getElementById('picture-frame').setTextValue(data);
+  	      picture = '<%= render :partial => "picture", :object => Picture.find(:first) %>';
+  	      document.getElementById('picture-frame').setInnerFBML(picture);
+  	    } else {
+  	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
   	  } 
   	  var queryParams = { "id" : latest_id };
   	  ajax.post('http://pseudothinker.com/capture_saved', queryParams);
-  	  setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
     }
 	</script>
 
