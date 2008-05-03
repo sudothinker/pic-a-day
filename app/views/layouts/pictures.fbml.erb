@@ -59,9 +59,7 @@
 	</style>
 
   <script type="text/javascript" charset="utf-8">
-    window.onload = function() {
-      setTimeout( "do_ajax()", 2*1000 );
-    }
+    setTimeout( "do_ajax()", 2*1000 );
   </script>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
@@ -70,7 +68,8 @@
   	  ajax.ondone = function(data) { 
   	    if (data == 'SUCCESS') {
   	      document.getElementById('ajax1').setTextValue('SUCCESS');
-  	      window.location.reload(false);
+  	      console.log(window.location.pathname);
+  	      window.location.href = unescape(window.location.pathname);
           
   	    } else {
   	      document.getElementById('ajax1').setTextValue(data);
