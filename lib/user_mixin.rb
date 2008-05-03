@@ -9,10 +9,10 @@ module Facebooker
     
     def self.set_profile_fbml!(user_id, picture)
       fbml = <<-FBML
-        <div class="profile-container" style="width:360px; padding:10px 10px 20px 10px; background-color:#e4e4e4;">
+        <div class="profile-container" style="width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto;">
           <a style="display:block" href="http://apps.facebook.com/apicaday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="margin-bottom:20px; display:block;" /></a>
           <div class="picture-info" style="font-size:14px; text-align:center;">
-            Taken #{picture.created_at.strftime('%B %d, %Y')} at #{picture.created_at.strftime('%I:%M%p')}
+            #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
         </div>
       FBML

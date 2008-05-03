@@ -1,8 +1,8 @@
 <div class="preview"><%= image_tag(picture.authenticated_s3_url) %></div>
 <div class="panel">
-  <div class="about"><%= picture.created_at.strftime("%B %d, %Y") %></div>
+  <div class="about"><%= picture.created_at.strftime("%B %d, %Y at %I:%M%p") %></div>
   <div class="options">
-    <%= link_to("&#171; Go to Camera", home_path, :class => "switch") unless Picture.already_taken_today?(facebook_user.id) %> 
+    <%= link_to("&#171; Go to Camera", home_path, :class => "back") unless Picture.already_taken_today?(facebook_user.id) %> 
     
     <fb:dialog id="delete_picture_dialog_<%= picture.id %>" cancel_button=1>
       <fb:dialog-title>Delete Picture</fb:dialog-title>
@@ -12,6 +12,6 @@
       <fb:dialog-button type="submit" value="Yes" href="<%= destroy_picture_path(@picture) %>" />
     </fb:dialog>
 
-    <a href="#" clicktoshowdialog="delete_picture_dialog_<%= picture.id %>" title="Click to delete" class="delete">Delete <%= ' / Retake' if picture.taken_today? %></a>
+    <a href="#" clicktoshowdialog="delete_picture_dialog_<%= picture.id %>" title="Click to delete" class="delete">Delete <%= 'Retake' if picture.taken_today? %></a>
   </div>
 </div>

@@ -8,7 +8,7 @@ module ApplicationHelper
   # Instructions are based on total pictures taken and whether picture has been taken today or not
   def display_instructions(pictures, taken_today = false)
     return if pictures.nil?
-    default = "Take one picture of yourself each day, every day - like #{link_to "this", "http://youtube.com/watch?v=6B26asyGKDo"}."
+    default = "Take a picture of yourself each day, every day - like #{link_to "this", "http://youtube.com/watch?v=6B26asyGKDo"}."
     come_back = "Come back tomorrow, and take another picture of yourself."
     more_options = "More options will be available after you've taken a few more pictures."
     
