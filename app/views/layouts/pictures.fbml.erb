@@ -64,8 +64,9 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-  	      picture = '<%= render :partial => "picture", :object => Picture.find(:first) %>';
-  	      document.getElementById('picture-frame').setInnerFBML(picture);
+  	      document.getElementById('current-pic-div').style.display = 'block';
+  	      document.getElementById('current-pic').src = data;
+  	      document.getElementById('picture-frame').style.display = 'none';
   	    } else {
   	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
