@@ -63,9 +63,10 @@
       var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 
+  	    document.getElementById('ajax1').setTextValue('working');
+	      document.getElementById('ajax2').setTextValue(window.location.href);
+	      
   	    if (data == 'SUCCESS') {
-  	      document.getElementById('ajax1').setTextValue('working');
-  	      document.getElementById('ajax2').setTextValue(window.location.href);
   	      window.location.href = window.location.href;
   	      history.go(0);
           window.location.reload(true);
