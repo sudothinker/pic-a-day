@@ -17,6 +17,9 @@ package
   import flash.net.URLRequest;
   import flash.text.TextField;
   import flash.text.TextFormat;
+  import flash.net.navigateToURL;
+  
+  [SWF(backgroundColor="#ffffff", frameRate="30")]
   
   public class PicADay extends Sprite
   {
@@ -30,13 +33,14 @@ package
     private var _take:Sprite;
     private var _countdown_display:TextField;
     private var _overlay:Sprite;
+    private var _spinner:Spinner;
     private var _temp_capture:Sprite;
     
     private var _capture_timer:Timer;
     
     private var _bitmap_container:BitmapData;
     
-    private const DEFAULT_CAPTURE_HANGTIME:Number = 1000;
+    private const HANGTIME:Number = 1000;
     private const DEFAULT_CAMERA_WIDTH:int = 480;
     private const DEFAULT_CAMERA_HEIGHT:int = 360;
     private const DEFAULT_CAMERA_FPS:Number = 25;
@@ -48,6 +52,7 @@ package
     {
       presets();
       init();
+      this.resize();
     }
     
     private function presets():void
@@ -62,6 +67,7 @@ package
       _overlay = new Sprite();
       _temp_capture = new Sprite();
       _countdown_display = new TextField();
+      _spinner = new Spinner();
       var display_format:TextFormat = new TextFormat("_sans", 24, 0xffffff);
       display_format.align = "center";
       _countdown_display.defaultTextFormat = display_format;
@@ -81,9 +87,12 @@ package
         _video.smoothing = true;
         _video.attachCamera(camera);
         _video.scaleX = -1;
+        _spinner.x = -(_video.width/2);
+        _spinner.y = (_video.height-_spinner.height);
         video_container.addChild(_video);
         video_container.addChild(_overlay);
         video_container.addChild(_temp_capture);
+        video_container.addChild(_spinner);
         drawOverlay();
       }
       else
@@ -92,7 +101,6 @@ package
       }
       stage.addEventListener(Event.RESIZE, resize);
       _take.addEventListener(MouseEvent.CLICK, startCapture);
-      this.resize();
     }
 
     private function drawUI():void
@@ -174,9 +182,9 @@ package
       var count_down:int = (this.DEFAULT_COUNT_DOWN-this._capture_timer.currentCount);
       _countdown_display.text = String(count_down);
       //_countdown_display.scaleX *= stage.stageWidth/_countdown_display.width;
-      _countdown_display.scaleX = _countdown_display.scaleY *= stage.stageHeight/_countdown_display.height;
+      _countdown_display.scaleX = _countdown_display.scaleY *= (stage.stageHeight/_countdown_display.height)/3.5;
       _countdown_display.x = (stage.stageWidth-_countdown_display.width)/2;
-      _countdown_display.y = (stage.stageHeight-_countdown_display.height)/2;
+      _countdown_display.y = (stage.stageHeight-_countdown_display.height);
     }
     
     private function capture(e:Event):void
@@ -204,6 +212,8 @@ package
     
     private function saveCapture(e:Event):void
     {
+      _spinner.visible = true;
+
       var png:ByteArray = convertToPNG(_bitmap_container);
       png.position = 0;
       var service:URLLoader = new URLLoader();
@@ -234,12 +244,21 @@ package
     private function captureSaved(e:Event):void
     {
       trace("captureSaved");
-      if(ExternalInterface.available) ExternalInterface.call("a11351932542_captureSaved");
-      this.reset();
+      var refresh_timer:Timer = new Timer(this.HANGTIME,1);
+      refresh_timer.addEventListener(TimerEvent.TIMER, refresh);
+      refresh_timer.start();
+      //if(ExternalInterface.available) ExternalInterface.call("captureSaved",this.fb_user_id,this.user_hash);
+      //this.reset();
+    }
+    
+    private function refresh(e:Event):void
+    {
+      flash.net.navigateToURL(new URLRequest(root.loaderInfo.url.substring(0,root.loaderInfo.url.lastIndexOf('/'))), "_self");
     }
     
     private function fail(e:Event):void
     {
+      //flash.net.navigateToURL(new URLRequest(root.loaderInfo.url.substring(0,root.loaderInfo.url.lastIndexOf('/'))), "_self");
       trace("zomg fail: ",e);
       this.reset();
     }
@@ -263,9 +282,9 @@ package
       }
       catch(e:Error) { }
       _take.visible = true;
+      _spinner.visible = false;
       _temp_capture.visible = false;
-      video_container.addEventListener(MouseEvent.CLICK, startCapture);
-      video_container.useHandCursor = video_container.buttonMode = true;
+      _take.addEventListener(MouseEvent.CLICK, startCapture);
     }
     
     private function convertToPNG(b:BitmapData):ByteArray
@@ -292,7 +311,7 @@ package
     {
       var stage_ratio:Number = stage.stageWidth/stage.stageHeight;
       var video_ratio:Number = Math.abs(video_container.width/video_container.height);
-      trace(stage_ratio,video_ratio,video_container.width,video_container.height);
+      //trace(stage_ratio,video_ratio,video_container.width,video_container.height);
       
       if(stage_ratio > video_ratio)
       {
@@ -308,10 +327,42 @@ package
       video_container.x = (stage.stageWidth) -((stage.stageWidth - video_container.width)/2);
       _take.x = (stage.stageWidth - _take.width)/2;
       _take.y = (stage.stageHeight) - _take.height - this.DEFAULT_MARGIN;
+      _spinner.x = -(_video.width/2);
+      _spinner.y = (_video.height-_spinner.height);
       _save.x = (stage.stageWidth/2) - _save.width - this.DEFAULT_MARGIN;
       _redo.x = (stage.stageWidth/2) + this.DEFAULT_MARGIN;
       _save.y = this.DEFAULT_MARGIN;
       _redo.y = this.DEFAULT_MARGIN;
     }
   }
+
 }
+
+import flash.display.Sprite;
+import flash.events.Event;
+
+class Spinner extends flash.display.Sprite
+{
+  
+  public function Spinner()
+  {
+    super();
+    for(var i:int=0; i<12; i++)
+    {
+      var tab:Sprite = new Sprite;
+      tab.graphics.beginFill(0xffffff,(1/12)*i);
+      tab.graphics.drawRoundRect(-1,-10,2,6,2,2);
+      tab.graphics.endFill();
+      tab.rotation = (360/12)*i;
+      this.addChild(tab);
+    }
+    this.addEventListener(Event.ENTER_FRAME, spin);
+    this.visible = false;
+  }
+  
+  private function spin(e:Event):void
+  {
+    this.rotation = (this.rotation+(360/12))%360;
+  }
+}
+
