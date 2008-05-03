@@ -61,6 +61,11 @@
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
   	  var ajax = new Ajax();
+  	  ajax.responseType = Ajax.RAW;
+  	  ajax.ondone = function(data) { 
+  	    document.getElementById('ajax1').setTextValue(data); 
+  	    document.getElementById('ajax2').setTextValue(''); 
+  	  } 
   	  ajax.post('http://pseudothinker.com/capture_saved');
     }
 	</script>
@@ -69,6 +74,8 @@
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
+  
+  <span id="ajax1"></span><span id="ajax2"></span>
   
   <div class="container clearfix">
     <%= yield %>
