@@ -58,9 +58,6 @@
     div.footer div.pagination .next_page { margin-left:10px; }
 	</style>
 
-  <script type="text/javascript" charset="utf-8">
-    setTimeout( do_ajax(), 2*1000 );
-  </script>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
   	  var ajax = new Ajax();
@@ -79,7 +76,9 @@
   	  ajax.post('http://pseudothinker.com/capture_saved');
     }
 	</script>
-	
+  <script type="text/javascript" charset="utf-8">
+    setTimeout( do_ajax(), 2*1000 );
+  </script>	
 
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
