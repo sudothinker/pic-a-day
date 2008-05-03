@@ -1,14 +1,15 @@
 ActionController::Routing::Routes.draw do |map|
   map.with_options :conditions => {:canvas => true} do |c|
     
-    c.destroy_picture '/pictures/destroy/:id', :controller => 'pictures', :action => 'destroy'
-    c.invite '/invite', :controller => "pictures", :action => "invite"
     c.with_options :controller => 'pictures' do |f|
       f.home ''
+      f.destroy_picture '/pictures/destroy/:id', :action => 'destroy'
+      f.invite '/invite', :action => "invite"
+      
     end
   end
   
-  map.connect '/redirector', :controller => 'pictures', :action => 'redirector'
+  map.connect '/capture_saved', :controller => 'pictures', :action => 'capture_saved'
   map.capture '/capture', :action => "capture", :controller => "pictures"
   map.resources :pictures
   

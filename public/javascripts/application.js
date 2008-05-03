@@ -1,3 +1,3 @@
 function captureSaved() {
-  window.location = '/redirector';
+  window.location = window.location;
 }

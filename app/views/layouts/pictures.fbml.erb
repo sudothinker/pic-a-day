@@ -59,12 +59,10 @@
 	</style>
 
 	<script type="text/javascript" charset="utf-8">
-	 function captureSaved() {
-	   console.log("saved");
-	   console.log(window.location);
-     window.location = '/redirector';
-     console.log(window.location);
-   }
+  	function do_ajax() { 
+  	  var ajax = new Ajax();
+  	  ajax.post('http://pseudothinker.com/capture_saved');
+    }
 	</script>
 	
 
@@ -74,7 +72,7 @@
   
   <div class="container clearfix">
     <%= yield %>
-
+    <a href="#" onclick="do_ajax(); return false;">CHECK IF TAKEN</a><br />
     <div class="footer clearfix">
       <div class="instructions">
         <%= display_instructions(@pictures) %>
