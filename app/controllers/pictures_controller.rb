@@ -16,15 +16,8 @@ class PicturesController < ApplicationController
   end
   
   def capture_saved
-    pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")
-    render :text => "SUCCESS"
-    #respond_to do |format|
-    #  format.js do
-    #    render :update do |page|
-    #      page << "window.location = window.location;" if pic
-    #    end
-    #  end
-    #end
+    pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")    
+    render :text => pic.nil? ? "FAIL" : "SUCCESS"
   end
   
   def invite
