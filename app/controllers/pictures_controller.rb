@@ -17,13 +17,14 @@ class PicturesController < ApplicationController
   
   def capture_saved
     pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")
-    respond_to do |format|
-      format.js do
-        render :update do |page|
-          page << "window.location = window.location;" if pic
-        end
-      end
-    end
+    render :text => "rarara: #{pic}"
+    #respond_to do |format|
+    #  format.js do
+    #    render :update do |page|
+    #      page << "window.location = window.location;" if pic
+    #    end
+    #  end
+    #end
   end
   
   def invite
