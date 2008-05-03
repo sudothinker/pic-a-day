@@ -59,32 +59,25 @@
 	</style>
 
 	<script type="text/javascript" charset="utf-8">
-  	function do_ajax() { 
+  	function do_ajax(latest_id) { 
       var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 
   	    if (data == 'SUCCESS') {
-  	      document.getElementById('ajax1').setTextValue('SUCCESS');
-  	      document.getElementById('ajax2').setTextValue(window.location.href);
   	      window.location.href = window.location.href;
   	      history.go(0);
           window.location.reload();
-  	    } else {
-  	      document.getElementById('ajax1').setTextValue(data);
   	    }
   	  } 
-  	  ajax.post('http://pseudothinker.com/capture_saved');
-  	  setTimeout( function() {do_ajax();}, 5*1000 );
+  	  var queryParams = { "id" : latest_id };
+  	  ajax.post('http://pseudothinker.com/capture_saved', queryParams);
+  	  setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
     }
 	</script>
 
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
-  
-  <span id="ajax1"></span><span id="ajax2"></span>
-  <span id="ajax3"></span>
-  
   
   <div class="container clearfix">
     <%= yield %>
