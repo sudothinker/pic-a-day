@@ -60,24 +60,6 @@
 
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
-  	  var ajax = new Ajax();
-  	  ajax.responseType = Ajax.RAW;
-  	  ajax.ondone = function(data) { 
-  	    if (data == 'SUCCESS') {
-  	      document.getElementById('ajax1').setTextValue('SUCCESS');
-  	      document.getElementById('ajax2').setTextValue(window.location);
-  	      document.getElementById('ajax3').setTextValue(unescape(window.location.pathname));
-  	      window.location.href = unescape(window.location.pathname);
-          
-  	    } else {
-  	      document.getElementById('ajax1').setTextValue(data);
-  	    }
-  	  } 
-  	  ajax.post('http://pseudothinker.com/capture_saved');
-    }
-	</script>
-  <script type="text/javascript" charset="utf-8">
-    setTimeout( function() {
       var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 
@@ -92,7 +74,11 @@
   	    }
   	  } 
   	  ajax.post('http://pseudothinker.com/capture_saved');
-    }, 2*1000 );
+  	  setTimeout( function() {do_ajax();}, 1000 );
+    }
+	</script>
+  <script type="text/javascript" charset="utf-8">
+    setTimeout( function() {do_ajax();}, 1000 );
   </script>	
 
 	<fb:tabs> 
