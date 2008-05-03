@@ -17,7 +17,7 @@ class PicturesController < ApplicationController
   
   def capture_saved
     pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")
-    render :text => "rarara: #{pic}"
+    render :text => "SUCCESS"
     #respond_to do |format|
     #  format.js do
     #    render :update do |page|
