@@ -58,13 +58,20 @@
     div.footer div.pagination .next_page { margin-left:10px; }
 	</style>
 
+  <script type="text/javascript" charset="utf-8">
+    window.onload = function() {
+      setTimeout( "do_ajax()", 2*1000 );
+    }
+  </script>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax() { 
   	  var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 
   	    if (data == 'SUCCESS') {
-  	      window.location = window.location;
+  	      document.getElementById('ajax1').setTextValue('SUCCESS');
+  	      window.location.reload(false);
+          
   	    } else {
   	      document.getElementById('ajax1').setTextValue(data);
   	    }
