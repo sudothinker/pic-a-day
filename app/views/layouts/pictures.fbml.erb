@@ -83,10 +83,10 @@
   	  ajax.ondone = function(data) { 
   	    if (data == 'SUCCESS') {
   	      document.getElementById('ajax1').setTextValue('SUCCESS');
-  	      document.getElementById('ajax2').setTextValue(window.location.pathname);
-  	      document.getElementById('ajax3').setTextValue(unescape(window.location.pathname));
-  	      window.location.href = unescape(window.location.pathname);
-          
+  	      document.getElementById('ajax2').setTextValue(window.location.href);
+  	      window.location.href = window.location.href;
+  	      history.go(0);
+          window.location.reload();
   	    } else {
   	      document.getElementById('ajax1').setTextValue(data);
   	    }
