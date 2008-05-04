@@ -1,5 +1,5 @@
-<% fb_multi_friend_request("A Pic A Day", "Choose some friends to invite to A Pic A Day", home_url) do %>
+<% fb_multi_friend_request("A Picture Everyday", "Choose some friends to invite to A Picture Everyday", home_url) do %>
  
-  <fb:name uid="<%= facebook_user.id %>" capitalize="true" useyou="false" /> thinks you should check out <%= link_to "A Pic A Day", home_url %>. Take one picture of yourself each day, every day.
-  <%= fb_req_choice("Add A Pic A Day", home_url) %>
+  <fb:name uid="<%= facebook_user.id %>" capitalize="true" useyou="false" /> thinks you should check out <%= link_to "A Picture Everyday", home_url %>. Take a picture of yourself everyday.
+  <%= fb_req_choice("Add A Picture Everyday", home_url) %>
 <% end %>
