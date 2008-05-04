@@ -30,11 +30,12 @@ module ApplicationHelper
      <fb:dialog id="youtube" cancel_button=1>
         <fb:dialog-title>Noah takes a photo of himself every day for 6 years.</fb:dialog-title>
         <fb:dialog-content>
-          #{youtube_video}
+          <center>#{youtube_video}</center>
         </fb:dialog-content>
       </fb:dialog>
     FBML
   end
+  
   def youtube_video
     <<-FBML
       <fb:swf swfbgcolor="000000" 
