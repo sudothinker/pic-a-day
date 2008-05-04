@@ -9,9 +9,9 @@ module ApplicationHelper
   def display_instructions(pictures, taken_today = false)
     return if pictures.nil?
     
-    default = "#{youtube_dialog}Take a picture of yourself each day, every day - like <a href=\"#\" clicktoshowdialog=\"youtube\" title=\"Click to view\">this</a>."
+    default = "#{youtube_dialog}Take a picture of yourself everyday - like <a href=\"#\" clicktoshowdialog=\"youtube\" title=\"Click to view\">this</a>."
     come_back = "Come back tomorrow, and take another picture of yourself."
-    more_options = "More options will be available after you've taken a few more pictures."
+    more_options = "More to come after you've taken a few more pictures."
     
     case pictures.size
     when 0
