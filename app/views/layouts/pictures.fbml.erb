@@ -64,7 +64,7 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-          document.getElementById('something').setTextValue("<meta http-equiv=\"refresh\" content=\"2\">");
+          document.getElementById('something').setInnerHTML("<meta http-equiv=\"refresh\" content=\"2\" />");
   	    } else {
   	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
