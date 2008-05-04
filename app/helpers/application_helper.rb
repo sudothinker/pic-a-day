@@ -8,7 +8,8 @@ module ApplicationHelper
   # Instructions are based on total pictures taken and whether picture has been taken today or not
   def display_instructions(pictures, taken_today = false)
     return if pictures.nil?
-    default = "Take a picture of yourself each day, every day - like #{link_to "this", "http://youtube.com/watch?v=6B26asyGKDo"}."
+    
+    default = "#{youtube_dialog}Take a picture of yourself each day, every day - like <a href=\"#\" clicktoshowdialog=\"youtube\" title=\"Click to view\">this</a>."
     come_back = "Come back tomorrow, and take another picture of yourself."
     more_options = "More options will be available after you've taken a few more pictures."
     
@@ -24,4 +25,23 @@ module ApplicationHelper
     end
   end
   
+  def youtube_dialog
+    <<-FBML
+     <fb:dialog id="youtube" cancel_button=1>
+        <fb:dialog-title>Noah takes a photo of himself every day for 6 years.</fb:dialog-title>
+        <fb:dialog-content>
+          #{youtube_video}
+        </fb:dialog-content>
+      </fb:dialog>
+    FBML
+  end
+  def youtube_video
+    <<-FBML
+      <fb:swf swfbgcolor="000000" 
+              imgstyle="border-width:3px; 
+              border-color:white;" 
+              swfsrc='http://www.youtube.com/v/6B26asyGKDo"/>' 
+              imgsrc='http://img.youtube.com/vi/6B26asyGKDo/2.jpg' width='340' height='270' />     
+    FBML
+  end
 end
