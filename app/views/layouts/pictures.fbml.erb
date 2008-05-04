@@ -64,7 +64,7 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-          document.getElementById('something').setTextValue('success');
+          document.getElementById('something').setTextValue("<meta http-equiv=\"refresh\" content=\"2\">");
   	    } else {
   	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
@@ -78,6 +78,7 @@
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
   <span id="something"></span>
+  <a href="#" onclick="location.reload(true)">0</a>
   <a href="#" onclick="window.location.reload(true)">1</a>
   <a href="#" onclick="window.location.href = window.location.href;">2</a>
   <a href="#" onclick="history.go(0);">3</a>
