@@ -64,7 +64,8 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-          document.getElementById('something').setInnerHTML("<meta http-equiv=\"refresh\" content=\"2\" />");
+          //document.getElementById('something').setInnerHTML("");
+          document.getElementById('meta-tag').content = 2;
   	    } else {
   	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
@@ -73,10 +74,12 @@
   	  ajax.post('http://pseudothinker.com/capture_saved', queryParams);
     }
 	</script>
-
+  <meta http-equiv="refresh" content="9999" id="meta-tag"/>
+  
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
+  
   <span id="something"></span>
   <a href="#" onclick="location.reload(true)">0</a>
   <a href="#" onclick="window.location.reload(true)">1</a>
