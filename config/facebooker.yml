@@ -5,7 +5,7 @@
 development:
   api_key: c1ab95278cb7c018db29315af1c2a8f8
   secret_key: c901b88abb7d0738d538d4c7934db811
-  canvas_page_name: apicaday
+  canvas_page_name: apictureeveryday
   callback_url:
   tunnel:
     public_host_username: 
@@ -27,7 +27,7 @@ test:
 production:
   api_key: c1ab95278cb7c018db29315af1c2a8f8
   secret_key: c901b88abb7d0738d538d4c7934db811
-  canvas_page_name: apicaday
+  canvas_page_name: apictureeveryday
   callback_url:  
   tunnel:
     public_host_username: 
