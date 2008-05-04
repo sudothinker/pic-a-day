@@ -40,7 +40,7 @@ package
     
     private var _bitmap_container:BitmapData;
     
-    private const HANGTIME:Number = 1000;
+    private const HANGTIME:Number = 5000;
     private const DEFAULT_CAMERA_WIDTH:int = 480;
     private const DEFAULT_CAMERA_HEIGHT:int = 360;
     private const DEFAULT_CAMERA_FPS:Number = 25;
