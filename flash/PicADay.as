@@ -234,7 +234,7 @@ package
       }
       catch(err:Error) {
         trace(err);
-        this.reset();
+        //this.reset();
       }
       this.saving();
       
@@ -244,9 +244,9 @@ package
     private function captureSaved(e:Event):void
     {
       trace("captureSaved");
-      var refresh_timer:Timer = new Timer(this.HANGTIME,1);
-      refresh_timer.addEventListener(TimerEvent.TIMER, refresh);
-      refresh_timer.start();
+      //var refresh_timer:Timer = new Timer(this.HANGTIME,1);
+      //refresh_timer.addEventListener(TimerEvent.TIMER, refresh);
+      //refresh_timer.start();
       //if(ExternalInterface.available) ExternalInterface.call("captureSaved",this.fb_user_id,this.user_hash);
       //this.reset();
     }
@@ -260,7 +260,7 @@ package
     {
       //flash.net.navigateToURL(new URLRequest(root.loaderInfo.url.substring(0,root.loaderInfo.url.lastIndexOf('/'))), "_self");
       trace("zomg fail: ",e);
-      this.reset();
+      //this.reset();
     }
     
     private function saving():void
