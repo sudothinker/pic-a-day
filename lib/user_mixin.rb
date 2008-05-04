@@ -9,9 +9,26 @@ module Facebooker
     
     def self.set_profile_fbml!(user_id, picture)
       fbml = <<-FBML
-        <div class="profile-container" style="width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto;">
-          <a style="display:block" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.profile.authenticated_s3_url}" alt="Me" style="margin-bottom:20px; display:block;" /></a>
-          <div class="picture-info" style="font-size:14px; text-align:center;">
+        <style type="text/css" media="screen">
+          div.profile-container { width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto; }
+          div.profile-container a { display:block; }
+          div.profile-container a img { display:block; }
+          div.profile-container a.profile img { margin-bottom:20px; width:280px; height:210px; }
+          div.profile-container div.picture-info { font-size:14px; text-align:center; }
+
+          div.narrow div.profile-container { width:80px; padding:10px; }
+          div.narrow div.profile-container div.picture-info { font-size:10px; }
+          div.narrow div.profile-container a.thumb img { width:80px; height:60px; margin-bottom:10px; }
+
+          div.profile-container a.thumb { display:none; }
+          div.narrow div.profile-container a.profile { display:none; }
+          div.narrow div.profile-container a.thumb { display:block; }
+        </style>
+
+        <div class="profile-container">
+          <a class="profile" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.profile.authenticated_s3_url}" /></a>
+          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
+          <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
         </div>
