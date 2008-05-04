@@ -64,9 +64,7 @@
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-  	      document.getElementById('current-pic-div').style.display = 'block';
-  	      document.getElementById('current-pic').src = data;
-  	      document.getElementById('picture-frame').style.display = 'none';
+          document.getElementById('something').setTextValue('success');
   	    } else {
   	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
@@ -79,7 +77,11 @@
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
-  
+  <span id="something"></span>
+  <a href="#" onclick="window.location.reload(true)">1</a>
+  <a href="#" onclick="window.location.href = window.location.href;">2</a>
+  <a href="#" onclick="history.go(0);">3</a>
+      
   <div class="container clearfix">
     <%= yield %>
     <div class="footer clearfix">
