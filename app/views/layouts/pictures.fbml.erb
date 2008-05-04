@@ -86,7 +86,7 @@
     <%= yield %>
     <div class="footer clearfix">
       <div class="instructions">
-        <%= display_instructions(@pictures) %>
+        <%= display_instructions(@pictures, Picture.already_taken_today?(facebook_user.id)) %>
       </div>
       <%= yield :pagination %>
     </div>
