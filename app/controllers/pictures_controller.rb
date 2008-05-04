@@ -4,7 +4,7 @@ class PicturesController < ApplicationController
   filter_parameter_logging { |k,v| k.gsub!(/./, "") if k =~ /\|/i } 
   before_filter :find_picture_strip
   before_filter :find_picture, :only => [:show, :destroy]
-  skip_before_filter :ensure_application_is_installed_by_facebook_user, :ensure_authenticated_to_facebook, :only => :capture
+  skip_before_filter :ensure_application_is_installed_by_facebook_user, :ensure_authenticated_to_facebook, :only => [:capture, :redirector]
   
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
@@ -17,7 +17,7 @@ class PicturesController < ApplicationController
   
   def capture_saved
     pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")    
-    render :text => pic.nil? ? "FAIL" : pic.authenticated_s3_url
+    render :text => pic.nil? ? "FAIL" : 'SUCCESS'
   end
   
   def invite

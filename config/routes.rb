@@ -9,6 +9,7 @@ ActionController::Routing::Routes.draw do |map|
     end
   end
   
+  map.connect '/redirector', :controller => 'pictures', :action => 'redirector'
   map.connect '/capture_saved', :controller => 'pictures', :action => 'capture_saved'
   map.capture '/capture', :action => "capture", :controller => "pictures"
   map.resources :pictures
