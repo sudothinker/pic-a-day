@@ -64,6 +64,10 @@
     {
       window.location.href = sURL;
     }
+    function refresh_via_form()
+    {
+      document.refresher.submit();
+    }
     function refresh2()
     {
       window.location.replace( sURL );
@@ -77,7 +81,9 @@
       window.parent.frames[0].location.reload();
     }
   </script>
-  
+  <form id="refresher" name="refresher" action="/">
+    
+  </form>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax(latest_id) { 
       var ajax = new Ajax();
@@ -100,6 +106,7 @@
   </fb:tabs>
   
   <span id="something"></span>
+  <a href="#" onclick="refresh_via_form()">form</a>
   <a href="#" onclick="refresh()">0</a>
   <a href="#" onclick="refresh2()">1</a>
   <a href="#" onclick="refresh3()">2</a>
