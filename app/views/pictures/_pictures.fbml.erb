@@ -8,6 +8,19 @@
     <% end %>
   </div>
   <% content_for(:pagination) do %>
-    <%= will_paginate pictures, :page_links => false %>
+  
+      <div class="pagination">
+        <% if pictures.previous_page %>
+          <a href="/apicaday/pictures/show/<%= params[:id] %>?page=<%= pictures.previous_page %>" class="prev_page" rel="prev">&laquo; Previous</a>
+        <% else %>
+          <span class="disabled prev_page">&laquo; Previous</span> 
+        <% end %>
+        
+        <% if pictures.next_page %>
+          <a href="/apicaday/pictures/show/<%= params[:id] %>?page=<%= pictures.next_page %>" class="next_page" rel="next">Next &raquo;</a>
+        <% else %>
+          <span class="disabled next_page">Next &raquo;</span> 
+        <% end %>
+      </div>
   <% end %>
 <% end %>
