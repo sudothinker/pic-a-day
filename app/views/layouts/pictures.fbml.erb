@@ -59,21 +59,25 @@
     div.footer div.pagination .next_page { margin-left:10px; }
 	</style>
 
+  <form id="refresher" name="refresher" action="http://apps.facebook.com/apicaday/redirector">
+    
+  </form>
 	<script type="text/javascript" charset="utf-8">
   	function do_ajax(latest_id) { 
       var ajax = new Ajax();
   	  ajax.responseType = Ajax.RAW;
   	  ajax.ondone = function(data) { 	      
   	    if (data != 'FAIL') {
-  	      document.getElementById('picture-frame').setTextValue(data);
+          document.getElementById('refresher').submit();
+  	    } else {
+  	      setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
   	    }
   	  } 
   	  var queryParams = { "id" : latest_id };
   	  ajax.post('http://pseudothinker.com/capture_saved', queryParams);
-  	  setTimeout( function() {do_ajax(latest_id);}, 5*1000 );
     }
 	</script>
-
+  
 	<fb:tabs> 
     <%= fb_tab_item "Invite Friends", invite_path, :align => "right", :selected => params[:action] == 'invite' %>
   </fb:tabs>
