@@ -225,7 +225,7 @@ package
       var serviceGateway:URLRequest = new URLRequest('http://pseudothinker.com/capture');
       serviceGateway.method = "POST";
       serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + Base64.encodeByteArray(png);
-      service.addEventListener(Event.COMPLETE, captureSaved);
+      //service.addEventListener(Event.COMPLETE, captureSaved);
       service.addEventListener(IOErrorEvent.IO_ERROR, fail);
       service.addEventListener(SecurityErrorEvent.SECURITY_ERROR, fail);
       try
