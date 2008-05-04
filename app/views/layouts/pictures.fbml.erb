@@ -66,7 +66,11 @@
     }
     function refresh_via_form()
     {
-      document.refresher.submit();
+      document.getElementById('refresher').submit();
+    }
+    function setIt() 
+    {
+      document.getElementById('something').setTextValue('it');
     }
     function refresh2()
     {
@@ -106,6 +110,7 @@
   </fb:tabs>
   
   <span id="something"></span>
+  <a href="#" onclick="setIt()">it</a>
   <a href="#" onclick="refresh_via_form()">form</a>
   <a href="#" onclick="refresh()">0</a>
   <a href="#" onclick="refresh2()">1</a>
