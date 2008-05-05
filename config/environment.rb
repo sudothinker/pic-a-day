@@ -59,4 +59,7 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
+ExceptionNotifier.exception_recipients = %w(mdmurray@gmail.com youngj@gmail.com h@henryyao.com)
+ExceptionNotifier.sender_address = %("Application Error" <errors@apictureeveryday.com>)
+
 require 'user_mixin'
