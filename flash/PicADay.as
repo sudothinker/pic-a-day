@@ -28,6 +28,7 @@ package
 
     private var video_container:Sprite;
     private var _video:Video;
+    private var _camera:Camera;
     private var _save:Sprite;
     private var _redo:Sprite;
     private var _take:Sprite;
@@ -35,12 +36,14 @@ package
     private var _overlay:Sprite;
     private var _spinner:Spinner;
     private var _temp_capture:Sprite;
+    private var _camera_index:int;
     
+    private var _camera_finder:Timer;
     private var _capture_timer:Timer;
     
     private var _bitmap_container:BitmapData;
     
-    private const HANGTIME:Number = 5000;
+    private const HANGTIME:Number = 1000;
     private const DEFAULT_CAMERA_WIDTH:int = 480;
     private const DEFAULT_CAMERA_HEIGHT:int = 360;
     private const DEFAULT_CAMERA_FPS:Number = 25;
@@ -52,7 +55,7 @@ package
     {
       presets();
       init();
-      this.resize();
+      //this.resize();
     }
     
     private function presets():void
@@ -68,39 +71,63 @@ package
       _temp_capture = new Sprite();
       _countdown_display = new TextField();
       _spinner = new Spinner();
+      _spinner.visible = true;
+      
       var display_format:TextFormat = new TextFormat("_sans", 24, 0xffffff);
       display_format.align = "center";
       _countdown_display.defaultTextFormat = display_format;
       _countdown_display.autoSize = "center";
       _countdown_display.wordWrap = true;
       _countdown_display.selectable = false;
-      this.drawUI();
-      this.addChild(video_container);
-      this.addChild(_take);
-      var camera:Camera = Camera.getCamera("2");
       
-      if (camera != null)
-      {
-        camera.addEventListener(ActivityEvent.ACTIVITY, activityHandler);
-        camera.setMode(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT, this.DEFAULT_CAMERA_FPS);
-        _video = new Video(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT);
-        _video.smoothing = true;
-        _video.attachCamera(camera);
-        _video.scaleX = -1;
-        _spinner.x = -(_video.width/2);
-        _spinner.y = (_video.height-_spinner.height);
-        video_container.addChild(_video);
-        video_container.addChild(_overlay);
-        video_container.addChild(_temp_capture);
-        video_container.addChild(_spinner);
-        drawOverlay();
-      }
-      else
-      {
-        trace("You need a camera.");
-      }
+      this.addChild(video_container);
+      
+      _camera = Camera.getCamera();
+      _camera.setMotionLevel(1,100);
+      _camera.addEventListener(ActivityEvent.ACTIVITY, cameraFound);
+      _camera.setMode(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT, this.DEFAULT_CAMERA_FPS);
+      _video = new Video(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT);
+      _video.smoothing = true;
+      _video.attachCamera(_camera);
+      _video.scaleX = -1;
+      _spinner.x = -(_video.width/2);
+      _spinner.y = (_video.height-_spinner.height);
+      video_container.addChild(_video);
+      video_container.addChild(_overlay);
+      video_container.addChild(_temp_capture);
+      video_container.addChild(_spinner);
+
+      _camera_index = -1;
+      _camera_finder = new Timer(200,0);
+      _camera_finder.addEventListener(TimerEvent.TIMER,findCamera);
+      _camera_finder.start();
+      
+      
+    }
+    
+    private function findCamera(e:Event=null):void
+    {
+      _camera_index = (_camera_index+1)%Camera.names.length;
+      _camera = Camera.getCamera(String(_camera_index));
+      _video.attachCamera(_camera);
+      _camera.setMotionLevel(1,1000/30);
+      _camera.addEventListener(ActivityEvent.ACTIVITY, cameraFound);
+      //trace("trying " + _camera.name);
+    }
+    
+    private function cameraFound(e:Event=null):void
+    {
+      _camera_finder.removeEventListener(TimerEvent.TIMER, findCamera);
+      _camera.removeEventListener(ActivityEvent.ACTIVITY, cameraFound);
+      _camera_finder.stop();
+      _spinner.visible = false;
+      this.drawUI();
+      this.drawOverlay();
+      this.addChild(_take);
+      this.resize();
       stage.addEventListener(Event.RESIZE, resize);
       _take.addEventListener(MouseEvent.CLICK, startCapture);
+      //trace("camera found: " + _camera.name);
     }
 
     private function drawUI():void
@@ -181,7 +208,6 @@ package
     {
       var count_down:int = (this.DEFAULT_COUNT_DOWN-this._capture_timer.currentCount);
       _countdown_display.text = String(count_down);
-      //_countdown_display.scaleX *= stage.stageWidth/_countdown_display.width;
       _countdown_display.scaleX = _countdown_display.scaleY *= (stage.stageHeight/_countdown_display.height)/3.5;
       _countdown_display.x = (stage.stageWidth-_countdown_display.width)/2;
       _countdown_display.y = (stage.stageHeight-_countdown_display.height);
@@ -243,7 +269,7 @@ package
     
     private function captureSaved(e:Event):void
     {
-      trace("captureSaved");
+      //trace("captureSaved");
       //var refresh_timer:Timer = new Timer(this.HANGTIME,1);
       //refresh_timer.addEventListener(TimerEvent.TIMER, refresh);
       //refresh_timer.start();
@@ -251,10 +277,12 @@ package
       //this.reset();
     }
     
+    /*
     private function refresh(e:Event):void
     {
       flash.net.navigateToURL(new URLRequest(root.loaderInfo.url.substring(0,root.loaderInfo.url.lastIndexOf('/'))), "_self");
     }
+    */
     
     private function fail(e:Event):void
     {
@@ -323,16 +351,20 @@ package
         video_container.width = stage.stageWidth;
         video_container.height = stage.stageWidth/video_ratio;
       }
-      video_container.y = (stage.stageHeight - video_container.height)/2;
-      video_container.x = (stage.stageWidth) -((stage.stageWidth - video_container.width)/2);
-      _take.x = (stage.stageWidth - _take.width)/2;
-      _take.y = (stage.stageHeight) - _take.height - this.DEFAULT_MARGIN;
-      _spinner.x = -(_video.width/2);
-      _spinner.y = (_video.height-_spinner.height);
-      _save.x = (stage.stageWidth/2) - _save.width - this.DEFAULT_MARGIN;
-      _redo.x = (stage.stageWidth/2) + this.DEFAULT_MARGIN;
-      _save.y = this.DEFAULT_MARGIN;
-      _redo.y = this.DEFAULT_MARGIN;
+      try
+      {
+        video_container.y = (stage.stageHeight - video_container.height)/2;
+        video_container.x = (stage.stageWidth) -((stage.stageWidth - video_container.width)/2);
+        _take.x = (stage.stageWidth - _take.width)/2;
+        _take.y = (stage.stageHeight) - _take.height - this.DEFAULT_MARGIN;
+        _spinner.x = -(_video.width/2);
+        _spinner.y = (_video.height-_spinner.height);
+        _save.x = (stage.stageWidth/2) - _save.width - this.DEFAULT_MARGIN;
+        _redo.x = (stage.stageWidth/2) + this.DEFAULT_MARGIN;
+        _save.y = this.DEFAULT_MARGIN;
+        _redo.y = this.DEFAULT_MARGIN;
+      }
+      catch(e:Error) { }
     }
   }
 
