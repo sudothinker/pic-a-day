@@ -25,7 +25,6 @@ module Facebooker
       <fb:wide>
         <div class="profile-wide">
           <a class="profile" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.profile.authenticated_s3_url}" /></a>
-          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
           <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
