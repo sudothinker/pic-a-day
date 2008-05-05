@@ -9,29 +9,36 @@ module Facebooker
     
     def self.set_profile_fbml!(user_id, picture)
       fbml = <<-FBML
-        <style type="text/css" media="screen">
-          div.profile-container { width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto; }
-          div.profile-container a { display:block; }
-          div.profile-container a img { display:block; }
-          div.profile-container a.profile img { margin-bottom:20px; width:280px; height:210px; }
-          div.profile-container div.picture-info { font-size:14px; text-align:center; }
+      <style type="text/css" media="screen">
+        div.profile-wide { width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto; }
+        div.profile-wide a { display:block; }
+        div.profile-wide a img { display:block; }
+        div.profile-wide a.profile img { margin-bottom:20px; width:280px; height:210px; }
+        div.profile-wide div.picture-info { font-size:14px; text-align:center; }
 
-          div.narrow div.profile-container { width:80px; padding:10px; }
-          div.narrow div.profile-container div.picture-info { font-size:10px; }
-          div.narrow div.profile-container a.thumb img { width:80px; height:60px; margin-bottom:10px; }
-
-          div.profile-container a.thumb { display:none; }
-          div.narrow div.profile-container a.profile { display:none; }
-          div.narrow div.profile-container a.thumb { display:block; }
-        </style>
-
-        <div class="profile-container">
+        div.profile-narrow { width:80px; padding:10px; background-color:#e4e4e4; margin:5px auto; }
+        div.profile-narrow a { display:block; }
+        div.profile-narrow a img { display:block; }
+        div.profile-narrow a.thumb img { margin-bottom:10px; width:80px; height:60px; }
+        div.profile-narrow div.picture-info { font-size:10px; text-align:center; }
+      </style>
+      <fb:wide>
+        <div class="profile-wide">
           <a class="profile" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.profile.authenticated_s3_url}" /></a>
           <a class="thumb" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
           <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
         </div>
+      </fb:wide>
+      <fb:narrow>
+        <div class="profile-narrow">
+          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
+          <div class="picture-info">
+            #{picture.created_at.strftime('%B %d, %Y')}
+          </div>
+        </div>
+      </fb:narrow>
       FBML
       update_profile_fbml!(user_id, fbml)
     end
