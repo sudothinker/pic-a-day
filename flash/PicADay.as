@@ -250,7 +250,7 @@ package
       this.fb_user_id = root.loaderInfo.parameters['fb_user_id']
       this.user_hash = root.loaderInfo.parameters['user_hash']
             
-      var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/capture');
+      var serviceGateway:URLRequest = new URLRequest('http://pseudothinker.com/capture');
       serviceGateway.method = "POST";
       serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + Base64.encodeByteArray(png);
       //service.addEventListener(Event.COMPLETE, captureSaved);
