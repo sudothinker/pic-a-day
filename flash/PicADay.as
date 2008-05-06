@@ -40,7 +40,7 @@ package
     
     private var _camera_finder:Timer;
     private var _capture_timer:Timer;
-    
+        
     private var _bitmap_container:BitmapData;
     
     private const HANGTIME:Number = 1000;
@@ -79,26 +79,26 @@ package
       _countdown_display.autoSize = "center";
       _countdown_display.wordWrap = true;
       _countdown_display.selectable = false;
+      _video = new Video(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT);
       
       this.addChild(video_container);
-      
-      _camera = Camera.getCamera();
-      _camera.setMotionLevel(1,100);
-      _camera.addEventListener(ActivityEvent.ACTIVITY, cameraFound);
-      _camera.setMode(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT, this.DEFAULT_CAMERA_FPS);
-      _video = new Video(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT);
-      _video.smoothing = true;
-      _video.attachCamera(_camera);
-      _video.scaleX = -1;
-      _spinner.x = -(_video.width/2);
-      _spinner.y = (_video.height-_spinner.height);
       video_container.addChild(_video);
       video_container.addChild(_overlay);
       video_container.addChild(_temp_capture);
       video_container.addChild(_spinner);
+      
+      //_camera = Camera.getCamera();
+      //_camera.setMotionLevel(10,100);
+      //_camera.setMode(32,24,60,false);
+      //_camera.addEventListener(ActivityEvent.ACTIVITY, cameraFound);
+      _video.smoothing = true;
+      //_video.attachCamera(_camera);
+      _video.scaleX = -1;
+      _spinner.x = -(_video.width/2);
+      _spinner.y = (_video.height-_spinner.height);
 
-      _camera_index = -1;
-      _camera_finder = new Timer(200,0);
+      _camera_index = 0;
+      _camera_finder = new Timer(1000,0);
       _camera_finder.addEventListener(TimerEvent.TIMER,findCamera);
       _camera_finder.start();
       
@@ -107,16 +107,19 @@ package
     
     private function findCamera(e:Event=null):void
     {
+      _video.clear();
       _camera_index = (_camera_index+1)%Camera.names.length;
       _camera = Camera.getCamera(String(_camera_index));
+      _camera.setMotionLevel(10,80);
       _video.attachCamera(_camera);
-      _camera.setMotionLevel(1,1000/30);
       _camera.addEventListener(ActivityEvent.ACTIVITY, cameraFound);
-      //trace("trying " + _camera.name);
+      trace("trying " + _camera.name);
     }
     
     private function cameraFound(e:Event=null):void
     {
+      trace("camera found: " + _camera.name + ", " + _camera.activityLevel);
+      _camera.setMode(this.DEFAULT_CAMERA_WIDTH, this.DEFAULT_CAMERA_HEIGHT, this.DEFAULT_CAMERA_FPS);
       _camera_finder.removeEventListener(TimerEvent.TIMER, findCamera);
       _camera.removeEventListener(ActivityEvent.ACTIVITY, cameraFound);
       _camera_finder.stop();
@@ -127,7 +130,6 @@ package
       this.resize();
       stage.addEventListener(Event.RESIZE, resize);
       _take.addEventListener(MouseEvent.CLICK, startCapture);
-      //trace("camera found: " + _camera.name);
     }
 
     private function drawUI():void
@@ -248,7 +250,7 @@ package
       this.fb_user_id = root.loaderInfo.parameters['fb_user_id']
       this.user_hash = root.loaderInfo.parameters['user_hash']
             
-      var serviceGateway:URLRequest = new URLRequest('http://pseudothinker.com/capture');
+      var serviceGateway:URLRequest = new URLRequest('http://0.0.0.0:3000/capture');
       serviceGateway.method = "POST";
       serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + Base64.encodeByteArray(png);
       //service.addEventListener(Event.COMPLETE, captureSaved);
@@ -382,7 +384,7 @@ class Spinner extends flash.display.Sprite
     for(var i:int=0; i<12; i++)
     {
       var tab:Sprite = new Sprite;
-      tab.graphics.beginFill(0xffffff,(1/12)*i);
+      tab.graphics.beginFill(0xaaaaaa,(1/12)*i);
       tab.graphics.drawRoundRect(-1,-10,2,6,2,2);
       tab.graphics.endFill();
       tab.rotation = (360/12)*i;
