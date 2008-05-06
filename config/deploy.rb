@@ -15,7 +15,7 @@ set :deploy_to, "/home/mik/www/#{application}"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
-set :location, 'apictureeveryday.com'
+set :location, 'pseudothinker.com'
 role :app, location
 role :web, location
 role :db,  location, :primary => true
