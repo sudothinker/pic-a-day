@@ -4,7 +4,7 @@ set :application, "apictureeveryday"
 set :scm, :git
 set :user, "mik"
 set :repository,  "git@github.com:sudothinker/pic-a-day.git"
-set :branch, "origin/master"
+set :branch, "origin/staging"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
