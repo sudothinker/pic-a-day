@@ -3,6 +3,10 @@ require 'digest/sha1'
 module Facebooker
   # Holds attributes and behavior for a Facebook User
   class User
+    def self_or_in_friends?(user_id)
+      self.id == user_id || self.friends.map(&:id).include?(user_id)
+    end
+    
     def self.generate_hash(user_id)
       Digest::SHA1.hexdigest("--#{user_id}--70e167fcbe5217ea2250b552d13a4f675a6a4993--")
     end
@@ -24,7 +28,7 @@ module Facebooker
       </style>
       <fb:wide>
         <div class="profile-wide">
-          <a class="profile" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.profile.authenticated_s3_url}" /></a>
+          <a class="profile" href="http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}"><img src="#{picture.profile.authenticated_s3_url}" /></a>
           <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
@@ -32,7 +36,7 @@ module Facebooker
       </fb:wide>
       <fb:narrow>
         <div class="profile-narrow">
-          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
+          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
           <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y')}
           </div>
