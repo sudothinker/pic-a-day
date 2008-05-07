@@ -1,7 +1,7 @@
 --- 
-cwd: /home/mik/www/apictureeveryday/current
+cwd: /home/mik/www/apictureeverydaystage/current
 log_file: log/mongrel.log
-port: "8004"
+port: "8006"
 environment: production
 address: 127.0.0.1
 pid_file: tmp/pids/mongrel.pid
