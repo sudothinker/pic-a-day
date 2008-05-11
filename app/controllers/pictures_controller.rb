@@ -40,7 +40,7 @@ class PicturesController < ApplicationController
     if @picture.taken_today?
       last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL AND id < ?", facebook_user.id, @picture.id], :order => "id DESC")
       default = <<-DEF
-        <center><a href="http://apps.facebook.com/apictureeveryday"><img src="http://pseudothinker.com/images/koala.jpg" alt="A Picture Everyday" /></a></center>
+        <center><a href="http://apps.facebook.com/apictureeverydaystag"><img src="http://stage.pseudothinker.com/images/koala.jpg" alt="A Picture Everyday" /></a></center>
       DEF
       last_picture.nil? ? Facebooker::User.update_profile_fbml!(facebook_user.id, default) : Facebooker::User.set_profile_fbml!(facebook_user.id, last_picture)
     end
