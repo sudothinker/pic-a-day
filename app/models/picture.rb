@@ -2,7 +2,7 @@ require 'RMagick'
 class Picture < ActiveRecord::Base
   include Magick
   THUMBNAILS = {:thumb => '80x60', :profile => '280x210'}
-  has_attachment :storage => :filesystem,
+  has_attachment :storage => :file_system,
                  :content_type => :image,
                  :thumbnails => THUMBNAILS
   validates_as_attachment      
