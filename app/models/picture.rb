@@ -1,7 +1,7 @@
 require 'RMagick'
 class Picture < ActiveRecord::Base
   include Magick
-  THUMBNAILS = {:thumb => '80x60', :profile => '280x210'}
+  THUMBNAILS = {:thumb => '80x60', :narrow => '128x96', :profile => '280x210'}
   has_attachment :storage => :s3,
                  :content_type => :image,
                  :s3_access => :authenticated_read,

@@ -20,10 +20,10 @@ module Facebooker
         div.profile-wide a.profile img { margin-bottom:20px; width:280px; height:210px; }
         div.profile-wide div.picture-info { font-size:14px; text-align:center; }
 
-        div.profile-narrow { width:80px; padding:10px; background-color:#e4e4e4; margin:5px auto; }
+        div.profile-narrow { width:128px; padding:10px; background-color:#e4e4e4; margin:5px auto; }
         div.profile-narrow a { display:block; }
         div.profile-narrow a img { display:block; }
-        div.profile-narrow a.thumb img { margin-bottom:10px; width:80px; height:60px; }
+        div.profile-narrow a.thumb img { margin-bottom:10px; width:128px; height:96px; }
         div.profile-narrow div.picture-info { font-size:10px; text-align:center; }
       </style>
       <fb:wide>
@@ -36,7 +36,7 @@ module Facebooker
       </fb:wide>
       <fb:narrow>
         <div class="profile-narrow">
-          <a class="thumb" href="http://apps.facebook.com/apictureeverydaystag/pictures/#{picture.id}"><img src="#{picture.thumb.authenticated_s3_url}" /></a>
+          <a class="thumb" href="http://apps.facebook.com/apictureeverydaystag/pictures/#{picture.id}"><img src="#{picture.narrow.authenticated_s3_url}" /></a>
           <div class="picture-info">
             #{picture.created_at.strftime('%B %d, %Y')}
           </div>
