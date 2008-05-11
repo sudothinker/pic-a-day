@@ -12,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/redirector', :controller => 'pictures', :action => 'redirector'
   map.connect '/capture_saved', :controller => 'pictures', :action => 'capture_saved'
   map.capture '/capture', :action => "capture", :controller => "pictures"
-  map.resources :pictures
+  map.resources :pictures, :comments
   
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'

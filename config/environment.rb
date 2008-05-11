@@ -61,5 +61,6 @@ end
 
 ExceptionNotifier.exception_recipients = %w(mdmurray@gmail.com youngj@gmail.com h@henryyao.com)
 ExceptionNotifier.sender_address = %("Application Error" <errors@apictureeveryday.com>)
+ExceptionNotifier.email_prefix = "[ERROR STAGE] "
 
 require 'user_mixin'
