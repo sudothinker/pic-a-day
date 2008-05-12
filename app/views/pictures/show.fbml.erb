@@ -19,7 +19,7 @@
   </fb:dialog>
   
   <ul class="more-options">
-    <li class="share"><fb:share-button class="url" href="<%= picture_url(@picture) %>"></li>
+    <li class="share"><fb:share-button class="url" href="<%= picture_url(@picture) %>" /></li>
     <% if @picture.fb_user_id == facebook_user.id %>
       <% unless Picture.already_taken_today?(facebook_user.id) %>
         <li><%= link_to("&#171; Back to Camera", home_path) %></li>
