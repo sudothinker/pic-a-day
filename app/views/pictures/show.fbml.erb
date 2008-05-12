@@ -21,7 +21,14 @@
   </fb:dialog>
   
   <ul class="more-options">
-    <li class="share">Put Share Form Here</li>
+    <li class="share">
+      <fb:share-button class="meta"> 
+        <meta name="medium" content="photo"/> 
+        <meta name="title" content=""/> 
+        <link rel="image_src" href="<%= @picture.thumb.authenticated_s3_url %>"/> 
+        <link rel="target_url" href="http://apps.facebook.com/apictureeverydaystag/pictures/<%= @picture.id %>"/> 
+      </fb:share-button>
+    </li>
     <li><%= link_to("&#171; Back to Camera", home_path) unless Picture.already_taken_today?(facebook_user.id) %></li>
     <li><a href="#">Make Profile Picture</a></li>
     <li><a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Delete Picture" class="delete">Delete Picture</a></li>
