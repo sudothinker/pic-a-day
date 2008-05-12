@@ -98,12 +98,6 @@
   
   <div class="container clearfix">
     <%= yield %>
-    <div class="footer clearfix">
-      <div class="instructions">
-        <%= display_instructions(@pictures, Picture.already_taken_today?(facebook_user.id)) %>
-      </div>
-      <%= yield :pagination %>
-    </div>
   </div>
   
   <fb:google-analytics uacct="UA-4315977-1" />

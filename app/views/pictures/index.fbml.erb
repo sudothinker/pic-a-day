@@ -5,3 +5,10 @@
 <%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://stage.pseudothinker.com/flash/PicADay#{'Stage' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420, :flashvars => "fb_user_id=#{facebook_user.id}&user_hash=#{@user_hash}") %>
 </div>
 <%= render_pictures @pictures %>
+
+<div class="footer clearfix">
+  <div class="instructions">
+    <%= display_instructions(@pictures, Picture.already_taken_today?(facebook_user.id)) %>
+  </div>
+  <%#= yield :pagination %>
+</div>
