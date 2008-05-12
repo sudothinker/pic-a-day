@@ -1,7 +1,4 @@
 <div class="preview"><%= image_tag(picture.authenticated_s3_url) %></div>
 <div class="panel">
   <div class="about"><%= picture.created_at.strftime("%B %d, %Y at %I:%M%p") %></div>
-  <div class="options">
-    <%= link_to("&#171; Go to Camera", home_path, :class => "back") unless Picture.already_taken_today?(facebook_user.id) %>
-  </div>
 </div>

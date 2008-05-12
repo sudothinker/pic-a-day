@@ -1,14 +1,11 @@
 <fieldset>
   <h5>Comment</h5>
-  <fb:editor action="http://apps.facebook.com/apictureeverydaystag/comments" width="420">  
+  <fb:editor action="http://apps.facebook.com/apictureeverydaystag/comments" width="420" labelwidth="1">  
     <input type="hidden" value="<%= picture_id %>" name="comment[picture_id]">
-    <fb:editor-textarea name="comment[text]">
-    </fb:editor-textarea>
-
+    <fb:editor-textarea name="comment[text]"></fb:editor-textarea>
     <fb:editor-buttonset>  
       <fb:editor-button value="Add Comment"/>  
     </fb:editor-buttonset> 
   </fb:editor>
-</div>
-
+</fieldset>
 
