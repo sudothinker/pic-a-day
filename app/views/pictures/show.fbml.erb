@@ -4,8 +4,10 @@
 
 <%= render_pictures @pictures, @picture %>
 
-<%= render :partial => 'comments/form', :locals => {:picture_id => @picture.id} %>
-
-<fb:wall>
-  <%= render :partial => 'comments/comment', :collection => @picture.comments %>
-</fb:wall>
+<div class="wall">
+  <fb:wall>
+    <%= render :partial => 'comments/comment', :collection => @picture.comments %>
+  </fb:wall>
+  
+  <%= render :partial => 'comments/form', :locals => {:picture_id => @picture.id} %>
+</div>
