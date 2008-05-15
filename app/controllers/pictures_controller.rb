@@ -31,7 +31,8 @@ class PicturesController < ApplicationController
     fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
     return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
     picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
-    Facebooker::User.set_profile_fbml!(fb_user_id, picture)
+    fb_page_id = (params[:fb_sig_is_admin] == "1" && params[:fb_sig_page_added] == "1" && !params[:fb_page_id].blank?) ? params[:fb_page_id] : nil
+    Facebooker::User.set_profile_fbml!(fb_page_id || fb_user_id, picture)
     render :nothing => true
   end
   
