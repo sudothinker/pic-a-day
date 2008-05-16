@@ -257,7 +257,7 @@ package
       this.fb_sig_is_admin = root.loaderInfo.parameters['fb_sig_is_admin']
       this.fb_sig_page_added = root.loaderInfo.parameters['fb_sig_page_added']
             
-      var serviceGateway:URLRequest = new URLRequest('http://pseudothinker.com/capture');
+      var serviceGateway:URLRequest = new URLRequest('http://stage.pseudothinker.com/capture');
       serviceGateway.method = "POST";
       serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + this.fb_page_id + "|" + this.fb_sig_is_admin + "|" + this.fb_sig_page_added + "|" + Base64.encodeByteArray(png);
       //service.addEventListener(Event.COMPLETE, captureSaved);

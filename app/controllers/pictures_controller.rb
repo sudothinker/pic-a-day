@@ -2,7 +2,7 @@ require 'base64'
 class PicturesController < ApplicationController
   # Suppresses image binary data from logger, Perhaps slice! would be faster
   filter_parameter_logging { |k,v| k.gsub!(/./, "") if k =~ /\|/i } 
-  before_filter :find_picture_strip, :only => [:show, :index]
+
   before_filter :find_picture, :only => [:show, :destroy]
   skip_before_filter :ensure_application_is_installed_by_facebook_user, :ensure_authenticated_to_facebook, :only => [:capture, :redirector]
   
@@ -10,9 +10,11 @@ class PicturesController < ApplicationController
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
     redirect_to picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
+    @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
   end
   
   def show
+    @pictures = Picture.paginate_by_fb_user_id(@picture.fb_page_id || @picture.fb_user_id, :page => params[:page], :per_page => 6, :order => "id DESC")
   end
   
   def upload
@@ -22,9 +24,10 @@ class PicturesController < ApplicationController
   def create
     @picture = Picture.new params[:picture]
     fb_page_id = (params["fb_sig_is_admin"] == "1" && params["fb_sig_page_added"] == "1" && !params["fb_sig_page_id"].nil?) ? params["fb_sig_page_id"] : nil
-    @picture.fb_user_id = fb_page_id || facebook_user.id
+    @picture.fb_user_id = facebook_user.id
+    @picture.fb_page_id = fb_page_id
     if @picture.save!
-      Facebooker::User.set_profile_fbml!(@picture.fb_user_id, @picture)
+      Facebooker::User.set_profile_fbml!(@picture.fb_page_id || @picture.fb_user_id, @picture)
       redirect_to "http://apps.facebook.com/apictureeveryday/pictures/#{@picture.id}"
     else
       redirect_to "http://apps.facebook.com/apictureeveryday/"
@@ -66,12 +69,8 @@ class PicturesController < ApplicationController
   end
   
   protected
-    def find_picture_strip
-      @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
-    end
-    
     def find_picture
       @picture = Picture.find(params[:id], :conditions => "parent_id IS NULL")
-      redirect_to home_url and return false if @picture.nil? || !facebook_user.self_or_in_friends?(@picture.fb_user_id)
+      redirect_to home_url and return false if @picture.nil? || (!facebook_user.self_or_in_friends?(@picture.fb_user_id) && @picture.fb_page_id.blank?)
     end
 end

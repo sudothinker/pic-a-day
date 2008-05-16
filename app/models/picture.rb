@@ -9,7 +9,8 @@ class Picture < ActiveRecord::Base
   validates_as_attachment      
   
   validate :validates_one_picture_per_day
-  
+  attr_protected :fb_page_id
+  has_many :comments
   acts_as_paranoid
   
   def self.create_from_png_data_and_fb_user_id(png_data, fb_user_id)

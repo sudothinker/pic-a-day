@@ -2,4 +2,36 @@
   <%= render :partial => "picture", :object => @picture %>
 </div>
 
-<%= render_pictures @pictures, @picture %>
+<%#= render_pictures @pictures, @picture %>
+
+<div class="picture-actions clearfix">
+  <div class="wall-and-form">
+    <fb:wall>
+      <%= render :partial => 'comments/comment', :collection => @picture.comments %>
+    </fb:wall>
+    <%= render :partial => 'comments/form', :locals => {:picture_id => @picture.id} %>
+  </div>
+  
+  <% if @picture.fb_user_id == facebook_user.id %>
+  <fb:dialog id="delete_picture_dialog_<%= @picture.id %>" cancel_button=1>
+    <fb:dialog-title>Delete Picture</fb:dialog-title>
+    <fb:dialog-content>
+      Are you sure you want to delete this picture? <%= 'You cannot retake it again.' unless @picture.taken_today? %>
+    </fb:dialog-content>
+    <fb:dialog-button type="submit" value="Yes" href="<%= destroy_picture_path(@picture) %>" />
+  </fb:dialog>
+  
+  <ul class="more-options">
+    <li class="share">
+      <fb:share-button class="meta"> 
+        <meta name="medium" content="photo"/> 
+        <meta name="title" content="A Picture Everyday"/> 
+        <link rel="image_src" href="<%= @picture.thumb.authenticated_s3_url %>"/> 
+        <link rel="target_url" href="http://apps.facebook.com/apictureeveryday/pictures/<%= @picture.id %>"/> 
+      </fb:share-button>
+    </li>
+    <li><%= link_to("&#171; Back to Camera", home_path) unless Picture.already_taken_today?(facebook_user.id) %></li>
+    <li><a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Delete Picture" class="delete">Delete Picture</a></li>
+  </ul>
+  <% end %>
+</div>

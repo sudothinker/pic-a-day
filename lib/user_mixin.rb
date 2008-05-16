@@ -4,7 +4,7 @@ module Facebooker
   # Holds attributes and behavior for a Facebook User
   class User
     def self_or_in_friends?(user_id)
-      self.id == user_id || self.friends.map(&:id).include?(user_id) || user_id == 12594812349 || user_id == 2147483647
+      self.id == user_id || self.friends.map(&:id).include?(user_id)
     end
     
     def self.generate_hash(user_id)
