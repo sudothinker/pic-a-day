@@ -20,8 +20,8 @@ class PicturesController < ApplicationController
   end
   
   def create
-    @picture = Picture.new params[:picture]
-    @picture.fb_user_id = params[:page_id] || facebook_user.id
+    @picture = Picture.new :uploaded_data => params[:uploaded_data]
+    @picture.fb_user_id = params[:fb_page_id] || facebook_user.id
     if @picture.save!
       Facebooker::User.set_profile_fbml!(@picture.fb_user_id, @picture)
       redirect_to picture_url(@picture)
