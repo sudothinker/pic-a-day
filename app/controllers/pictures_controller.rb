@@ -21,7 +21,7 @@ class PicturesController < ApplicationController
   
   def create
     @picture = Picture.new params[:picture]
-    @picture.fb_user_id = params[:fb_page_id] || facebook_user.id
+    @picture.fb_user_id = params[:page_id] || facebook_user.id
     if @picture.save
       redirect_to picture_url(@picture)
     else
