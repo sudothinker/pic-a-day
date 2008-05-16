@@ -2,7 +2,7 @@ require 'base64'
 class PicturesController < ApplicationController
   # Suppresses image binary data from logger, Perhaps slice! would be faster
   filter_parameter_logging { |k,v| k.gsub!(/./, "") if k =~ /\|/i } 
-  before_filter :find_picture_strip
+  before_filter :find_picture_strip, :only => [:show, :index]
   before_filter :find_picture, :only => [:show, :destroy]
   skip_before_filter :ensure_application_is_installed_by_facebook_user, :ensure_authenticated_to_facebook, :only => [:capture, :redirector]
   
