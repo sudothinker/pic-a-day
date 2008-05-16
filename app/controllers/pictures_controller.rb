@@ -26,7 +26,7 @@ class PicturesController < ApplicationController
     fb_page_id = (params["fb_sig_is_admin"] == "1" && params["fb_sig_page_added"] == "1" && !params["fb_sig_page_id"].nil?) ? params["fb_sig_page_id"] : nil
     @picture.fb_user_id = facebook_user.id
     @picture.fb_page_id = fb_page_id
-    if @picture.save!
+    if @picture.save
       Facebooker::User.set_profile_fbml!(@picture.fb_page_id || @picture.fb_user_id, @picture)
       redirect_to "http://apps.facebook.com/apictureeveryday/pictures/#{@picture.id}"
     else
