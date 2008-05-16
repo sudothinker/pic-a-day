@@ -20,7 +20,7 @@
     </fb:dialog-content>
     <fb:dialog-button type="submit" value="Yes" href="<%= destroy_picture_path(@picture) %>" />
   </fb:dialog>
-  
+  <% end %>
   <ul class="more-options">
     <li class="share">
       <fb:share-button class="meta"> 
@@ -30,6 +30,7 @@
         <link rel="target_url" href="http://apps.facebook.com/apictureeveryday/pictures/<%= @picture.id %>"/> 
       </fb:share-button>
     </li>
+  <% if @picture.fb_user_id == facebook_user.id %>
     <li><%= link_to("&#171; Back to Camera", home_path) unless Picture.already_taken_today?(facebook_user.id) %></li>
     <li><a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Delete Picture" class="delete">Delete Picture</a></li>
   </ul>
