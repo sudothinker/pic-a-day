@@ -29,7 +29,7 @@ class PicturesController < ApplicationController
   
   # fb_user_id + "|" + user_hash + "|" + fb_page_id + "|" + fb_sig_is_admin + "|" + fb_sig_page_added + "|" + Base64.encodeByteArray(png);
   def capture
-    logged.info(request.raw_post[0..100])
+    logger.info(request.raw_post[0..100])
     fb_user_id, user_hash, fb_page_id, fb_sig_is_admin, fb_sig_page_added, encoded_png = request.raw_post.split("|", 6)
     logger.info(fb_page_id.nil? ? 'nil' : fb_page_id[0..50])
     logger.info(fb_sig_is_admin.nil? ? 'nil' : fb_sig_is_admin[0..50])
