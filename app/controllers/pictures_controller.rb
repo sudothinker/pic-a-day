@@ -21,7 +21,7 @@ class PicturesController < ApplicationController
   
   def create
     @picture = Picture.new params[:picture]
-    fb_page_id = (params[:fb_sig_is_admin] == "1" && params[:fb_sig_page_added] == "1" && !params[:fb_sig_page_id].blank?) ? params[:fb_sig_page_id] : nil
+    fb_page_id = (params["fb_sig_is_admin"] == "1" && params["fb_sig_page_added"] == "1" && !params["fb_sig_page_id"].nil?) ? params["fb_sig_page_id"] : nil
     @picture.fb_user_id = fb_page_id || facebook_user.id
     if @picture.save!
       Facebooker::User.set_profile_fbml!(@picture.fb_user_id, @picture)
