@@ -1,0 +1,10 @@
+<fieldset>
+  <h5>Upload a picture</h5>
+  <fb:editor action="http://apps.facebook.com/apictureeveryday/create" width="420" labelwidth="1">  
+    <input type="hidden" value="<%= params[:fb_page_id] %>" name="fb_page_id">
+    <input type="file" name="picture[uploaded_data]">
+    <fb:editor-buttonset>  
+      <fb:editor-button value="Upload"/>  
+    </fb:editor-buttonset> 
+  </fb:editor>
+</fieldset>
