@@ -15,6 +15,20 @@ class PicturesController < ApplicationController
   def show
   end
   
+  def upload
+    @picture = Picture.new
+  end
+  
+  def create
+    @picture = Picture.new params[:picture]
+    @picture.fb_user_id = facebook_user.id
+    if @picture.save
+      redirect_to picture_url(@picture)
+    else
+      redirect_to home_url
+    end
+  end
+  
   def capture_saved
     pic = Picture.find(:first, :conditions => ["id > ? AND fb_user_id = ?", params[:id], facebook_user.id], :order => "id DESC")    
     render :text => pic.nil? ? "FAIL" : 'SUCCESS'
@@ -29,11 +43,7 @@ class PicturesController < ApplicationController
   
   # fb_user_id + "|" + user_hash + "|" + fb_page_id + "|" + fb_sig_is_admin + "|" + fb_sig_page_added + "|" + Base64.encodeByteArray(png);
   def capture
-    logger.info(request.raw_post[0..100])
     fb_user_id, user_hash, fb_page_id, fb_sig_is_admin, fb_sig_page_added, encoded_png = request.raw_post.split("|", 6)
-    logger.info(fb_page_id.nil? ? 'nil' : fb_page_id[0..50])
-    logger.info(fb_sig_is_admin.nil? ? 'nil' : fb_sig_is_admin[0..50])
-    logger.info(fb_sig_page_added.nil? ? 'nil' : fb_sig_page_added[0..50])
     return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
     fb_page_id = (fb_sig_is_admin == "1" && fb_sig_page_added == "1" && !fb_page_id.blank?) ? fb_page_id : nil
     picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_page_id || fb_user_id)
