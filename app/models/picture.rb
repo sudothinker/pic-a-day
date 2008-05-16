@@ -9,6 +9,7 @@ class Picture < ActiveRecord::Base
   validates_as_attachment      
   
   validate :validates_one_picture_per_day
+  attr_protected :fb_page_id
   has_many :comments
   acts_as_paranoid
   
@@ -50,7 +51,7 @@ class Picture < ActiveRecord::Base
   
   protected
     def validates_one_picture_per_day
-      self.errors.add(:fb_user_id, 'Only one picture allowed per day') if self.class.already_taken_today?(self.fb_user_id)
+      self.errors.add(:fb_user_id, 'Only one picture allowed per day') if self.fb_page_id.blank? && self.class.already_taken_today?(self.fb_user_id)
       return self.errors.empty?
     end
 end

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 5) do
+ActiveRecord::Schema.define(:version => 6) do
 
   create_table "comments", :force => true do |t|
     t.text     "text"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 5) do
     t.integer  "parent_id"
     t.string   "thumbnail"
     t.datetime "deleted_at"
+    t.integer  "fb_page_id"
   end
 
   create_table "sessions", :force => true do |t|

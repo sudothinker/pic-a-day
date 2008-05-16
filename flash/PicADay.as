@@ -25,7 +25,10 @@ package
   {
     private var fb_user_id:String;
     private var user_hash:String;
-
+    private var fb_page_id:String;
+    private var fb_sig_is_admin:String;
+    private var fb_sig_page_added:String;
+    
     private var video_container:Sprite;
     private var _video:Video;
     private var _camera:Camera;
@@ -249,10 +252,14 @@ package
             
       this.fb_user_id = root.loaderInfo.parameters['fb_user_id']
       this.user_hash = root.loaderInfo.parameters['user_hash']
+      
+      this.fb_page_id = root.loaderInfo.parameters['fb_page_id']
+      this.fb_sig_is_admin = root.loaderInfo.parameters['fb_sig_is_admin']
+      this.fb_sig_page_added = root.loaderInfo.parameters['fb_sig_page_added']
             
       var serviceGateway:URLRequest = new URLRequest('http://stage.pseudothinker.com/capture');
       serviceGateway.method = "POST";
-      serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + Base64.encodeByteArray(png);
+      serviceGateway.data = this.fb_user_id + "|" + this.user_hash + "|" + this.fb_page_id + "|" + this.fb_sig_is_admin + "|" + this.fb_sig_page_added + "|" + Base64.encodeByteArray(png);
       //service.addEventListener(Event.COMPLETE, captureSaved);
       service.addEventListener(IOErrorEvent.IO_ERROR, fail);
       service.addEventListener(SecurityErrorEvent.SECURITY_ERROR, fail);

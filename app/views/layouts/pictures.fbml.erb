@@ -54,6 +54,7 @@
     ul.more-options li a { display:block; line-height:20px; font-size:11px; padding:0 3px; }
     ul.more-options li a:hover { text-decoration:none; background-color:#526ea7; color:#fff; }
     ul.more-options li.share { margin-bottom:15px; line-height:1em; border-bottom:0; }
+    ul.more-options li.share a { padding-right:14px; }
     
     /* invite tab */
     ul.toggle_tabs { margin-top:10px; }
@@ -73,7 +74,7 @@
     div.footer div.pagination .next_page { margin-left:10px; }
 	</style>
 
-  <form id="refresher" name="refresher" action="http://apps.facebook.com/apictureeverydaystag/redirector">
+  <form id="refresher" name="refresher" action="http://apps.facebook.com/apictureeveryday/redirector">
     
   </form>
 	<script type="text/javascript" charset="utf-8">
@@ -88,7 +89,7 @@
   	    }
   	  } 
   	  var queryParams = { "id" : latest_id };
-  	  ajax.post('http://stage.pseudothinker.com/capture_saved', queryParams);
+  	  ajax.post('http://pseudothinker.com/capture_saved', queryParams);
     }
 	</script>
   
