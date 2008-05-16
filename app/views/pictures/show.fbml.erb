@@ -1,8 +1,11 @@
 <div id="picture-frame">
-  <%= render :partial => "picture", :object => @picture %>
+  <%= render :partial => "picture", :object => @picture, :locals => {:next_picture => @next_picture} %>
 </div>
 
-<div class="pagination-inline">Previous Next</div>
+<div class="pagination-inline">
+  <%= link_to_if @prev_picture, "Previous", picture_path(@prev_picture) %> 
+  <%= link_to_if @next_picture, "Next", picture_path(@next_picture) %>
+</div>
 
 <div class="picture-actions clearfix">
   <div class="wall-and-form">
