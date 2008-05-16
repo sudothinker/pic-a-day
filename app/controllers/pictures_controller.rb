@@ -27,11 +27,12 @@ class PicturesController < ApplicationController
     redirect_to home_path
   end
   
+  # fb_user_id + "|" + user_hash + "|" + fb_page_id + "|" + fb_sig_is_admin + "|" + fb_sig_page_added + "|" + Base64.encodeByteArray(png);
   def capture
-    fb_user_id, user_hash, encoded_png = request.raw_post.split("|", 3)
+    fb_user_id, user_hash, fb_page_id, fb_sig_is_admin, fb_sig_page_added, encoded_png = request.raw_post.split("|", 6)
     return false unless user_hash == Facebooker::User.generate_hash(fb_user_id)
-    picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_user_id)
-    fb_page_id = (params[:fb_sig_is_admin] == "1" && params[:fb_sig_page_added] == "1" && !params[:fb_page_id].blank?) ? params[:fb_page_id] : nil
+    fb_page_id = (fb_sig_is_admin == "1" && fb_sig_page_added == "1" && !fb_page_id.blank?) ? fb_page_id : nil
+    picture = Picture.create_from_png_data_and_fb_user_id(Base64.decode64(encoded_png), fb_page_id || fb_user_id)
     Facebooker::User.set_profile_fbml!(fb_page_id || fb_user_id, picture)
     render :nothing => true
   end

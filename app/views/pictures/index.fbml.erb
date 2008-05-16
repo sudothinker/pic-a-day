@@ -2,6 +2,7 @@
   setTimeout( function() {do_ajax(<%= @pictures.empty? ? 0 : @pictures.first.id  %>);}, 5*1000 );
 </script>
 <div id="picture-frame">
-<%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420, :flashvars => "fb_user_id=#{facebook_user.id}&user_hash=#{@user_hash}") %>
+<%= tag("fb:swf", :swfbgcolor => "000000", :imgstyle => "border-width:3px; border-color:white;", :swfsrc => "http://pseudothinker.com/flash/PicADay#{'Prod' if RAILS_ENV == 'production'}.swf", :width => 480, :height => 420, :flashvars => "fb_user_id=#{facebook_user.id}&user_hash=#{@user_hash}&fb_page_id=#{params[:fb_page_id]}&fb_sig_is_admin=#{params[:fb_sig_is_admin]}&fb_sig_page_added=#{params[:fb_sig_page_added]}") %>
+
 </div>
 <%= render_pictures @pictures %>
