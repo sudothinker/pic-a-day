@@ -1,5 +1,5 @@
 set :keep_releases, 3
-set :application, "apicaday"
+set :application, "stage.apicaday"
 
 set :scm, :git
 set :user, "mik"
@@ -15,7 +15,7 @@ set :deploy_to, "/home/mik/www/#{application}"
 
 # If you aren't using Subversion to manage your source code, specify
 # your SCM below:
-set :location, 'pseudothinker.com'
+set :location, 'stage.pseudothinker.com'
 role :app, location
 role :web, location
 role :db,  location, :primary => true
