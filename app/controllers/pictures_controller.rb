@@ -14,7 +14,8 @@ class PicturesController < ApplicationController
   end
   
   def show
-    @pictures = Picture.paginate_by_fb_user_id(@picture.fb_page_id || @picture.fb_user_id, :page => params[:page], :per_page => 6, :order => "id DESC")
+    @next_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND id > ?", @picture.fb_page_id || @picture.fb_user_id, params[:id]], :order => "id ASC")
+    @prev_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND id < ?", @picture.fb_page_id || @picture.fb_user_id, params[:id]], :order => "id DESC")
   end
   
   def upload
