@@ -12,7 +12,6 @@ development:
     public_host:
     public_port: 4007
     local_port: 3000
- 
 production:
   api_key: 188ee78fd30406451066bc727919362d
   secret_key: 5e036deb08089a758efd155fab758f86

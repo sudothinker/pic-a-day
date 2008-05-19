@@ -3,8 +3,8 @@
 </div>
 
 <div class="pagination-inline">
-  <%= @prev_picture.nil? ? "Previous" : link_to("Previous", picture_path(@prev_picture)) %> 
-  <%= @next_picture.nil? ? "Next" : link_to("Next", picture_path(@next_picture)) %> 
+  <%= link_to "&laquo; Older Picture", picture_path(@prev_picture) if @prev_picture %>
+  <%= link_to "Newer Picture &raquo;", picture_path(@next_picture) if @next_picture %>
 </div>
 
 <div class="picture-actions clearfix">
@@ -33,8 +33,7 @@
         <link rel="target_url" href="http://apps.facebook.com/apictureeveryday/pictures/<%= @picture.id %>"/> 
       </fb:share-button>
     </li>
-  <% if @picture.fb_user_id == facebook_user.id %>
-    <li><%= link_to("&#171; Back to Camera", home_path) unless Picture.already_taken_today?(facebook_user.id) %></li>
+    <li>View More Pictures</li>
     <li><a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Delete Picture" class="delete">Delete Picture</a></li>
   <% end %>
   </ul>
