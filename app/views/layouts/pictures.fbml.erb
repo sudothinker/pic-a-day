@@ -31,11 +31,6 @@
     /* panel */
     #picture-frame div.panel { height:60px; width:480px; position:relative; }
     #picture-frame div.panel div.about { font-size:15px; text-align:left; line-height:60px; color:#666; text-align:center; font-weight:bold; }
-    /*
-    #picture-frame div.panel div.options a { position:absolute; }
-    #picture-frame div.panel div.options a.back { left:0; bottom:0; }
-    #picture-frame div.panel div.options a.delete { right:0; bottom:0; }
-    */
     
     /* carousel */
     #picture-carousel { width:612px; padding:0 17px 15px 17px; }
@@ -48,12 +43,13 @@
     div.picture-actions { padding:15px 20px; border-top:1px solid #d5d5d5; background-color:#fff; }
     div.wall-and-form { float:left; width:420px; }
     div.wall-and-form fieldset { border:0; margin:0; padding:20px 0 0 0; }
-    div.wall-and-form fieldset h5 { font-size:11px; }
+    div.wall-and-form fieldset h5 { font-size:11px; margin-left:13px; }
+    div.wall-and-form fieldset textarea { height:70px; }
     ul.more-options { float:right; width:150px; }
     ul.more-options li { border-bottom:1px solid #d5d5d5; }
     ul.more-options li a { display:block; line-height:20px; font-size:11px; padding:0 3px; }
     ul.more-options li a:hover { text-decoration:none; background-color:#526ea7; color:#fff; }
-    ul.more-options li.share { margin-bottom:15px; line-height:1em; border-bottom:0; }
+    ul.more-options li.share { margin-bottom:10px; line-height:1em; border-bottom:0; }
     ul.more-options li.share a { padding-right:14px; }
     
     /* invite tab */
@@ -72,6 +68,12 @@
     div.footer div.pagination a { font-weight:bold; padding:4px; }
     div.footer div.pagination a:hover { background-color:#526ea7; color:#fff; text-decoration:none; }
     div.footer div.pagination .next_page { margin-left:10px; }
+    
+    /* Inline Pagination */
+    div.pagination-inline { padding:10px 15px; text-align:right; color:#888; }
+    div.pagination-inline span { margin-left:8px; }
+    div.pagination-inline a { margin-left:12px; }
+    
 	</style>
 
   <form id="refresher" name="refresher" action="http://apps.facebook.com/apictureeveryday/redirector">
@@ -99,12 +101,6 @@
   
   <div class="container clearfix">
     <%= yield %>
-    <div class="footer clearfix">
-      <div class="instructions">
-        <%= display_instructions(@pictures, Picture.already_taken_today?(facebook_user.id)) %>
-      </div>
-      <%= yield :pagination %>
-    </div>
   </div>
   
   <fb:google-analytics uacct="UA-4315977-1" />

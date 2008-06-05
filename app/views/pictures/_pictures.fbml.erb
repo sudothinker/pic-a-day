@@ -2,7 +2,7 @@
   <div id="picture-carousel" class="clearfix">
     <% pictures.each do |p| %>
     <dl class="picture <%= 'selected' if p == picture %>">
-      <dd class="thumb"><%= link_to image_tag(p.thumb.authenticated_s3_url), picture_path(p, :page => params[:page]) %></dd>
+      <dd class="thumb"><%= link_to image_tag(p.thumb.authenticated_s3_url), picture_path(p) %></dd>
       <dt class="desc"><%= p.created_at.strftime("%B %d, %Y") %></dt>
     </dl>
     <% end %>
@@ -11,13 +11,13 @@
   
       <div class="pagination">
         <% if pictures.previous_page %>
-          <a href="/apictureeveryday/pictures/show/<%= params[:id] %>?page=<%= pictures.previous_page %>" class="prev_page" rel="prev">&laquo; Previous</a>
+          <a href="/apictureeveryday/pictures/?page=<%= pictures.previous_page %>" class="prev_page" rel="prev">&laquo; Previous</a>
         <% else %>
           <span class="disabled prev_page">&laquo; Previous</span> 
         <% end %>
         
         <% if pictures.next_page %>
-          <a href="/apictureeveryday/pictures/show/<%= params[:id] %>?page=<%= pictures.next_page %>" class="next_page" rel="next">Next &raquo;</a>
+          <a href="/apictureeveryday/pictures/?page=<%= pictures.next_page %>" class="next_page" rel="next">Next &raquo;</a>
         <% else %>
           <span class="disabled next_page">Next &raquo;</span> 
         <% end %>
