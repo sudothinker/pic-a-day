@@ -4,7 +4,7 @@ set :application, "apicaday"
 set :scm, :git
 set :user, "mik"
 set :repository,  "git@github.com:sudothinker/pic-a-day.git"
-set :branch, "origin/rel-1.4"
+set :branch, "origin/rel-1.5"
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
