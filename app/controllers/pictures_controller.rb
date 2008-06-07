@@ -32,10 +32,6 @@ class PicturesController < ApplicationController
     @picture.fb_user_id = facebook_user.id
     @picture.fb_page_id = fb_page_id
     if @picture.save
-      begin
-        facebook_user.publish_action(@picture.story)
-      rescue Facebooker::Session::TooManyUserActionCalls
-      end
       Facebooker::User.set_profile_fbml!(@picture.fb_page_id || @picture.fb_user_id, @picture)
       redirect_to "http://apps.facebook.com/apictureeveryday/pictures/#{@picture.id}"
     else
