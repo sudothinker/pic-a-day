@@ -4,6 +4,10 @@ class CommentsController < ApplicationController
     @comment = Comment.new params[:comment]
     @comment.fb_user_id = facebook_user.id
     if @comment.save
+      begin
+        facebook_user.publish_action(@comment.story)
+      rescue Facebooker::Session::TooManyUserActionCalls
+      end
       redirect_to picture_path(@comment.picture)
     else
       redirect_to picture_path(@comment.picture)
