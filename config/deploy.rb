@@ -20,7 +20,7 @@ role :app, location
 role :web, location
 role :db,  location, :primary => true
 
-set :deploy_via, :remote_cache
+set :deploy_via, :copy
 set :runner, user
 
 after "deploy:symlink", "sudothinker_symlink_configs"
