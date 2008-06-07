@@ -18,7 +18,7 @@ class PicturesController < ApplicationController
     if @picture.fb_page_id
       @pictures = Picture.paginate(:conditions => ["fb_page_id = ?", @picture.fb_page_id], :page => params[:page], :per_page => 6, :order => "id DESC")
     else
-      @pictures = Picture.paginate(:conditions => ["fb_user_id = ?", @picture.fb_user_id], :page => params[:page], :per_page => 6, :order => "id DESC")
+      @pictures = Picture.paginate(:conditions => ["fb_user_id = ? AND fb_page_id IS NULL", @picture.fb_user_id], :page => params[:page], :per_page => 6, :order => "id DESC")
     end
   end
   
