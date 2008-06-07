@@ -15,7 +15,7 @@
     <% end %>
     
     <% if pictures.next_page %>
-      <%= link_to "Next &raquo;", picture.nil? ? home_path(:page => pictures.previous_page) : picture_path(picture, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
+      <%= link_to "Next &raquo;", picture.nil? ? home_path(:page => pictures.next_page) : picture_path(picture, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
     <% else %>
       <span class="disabled next_page">Next &raquo;</span> 
     <% end %>
