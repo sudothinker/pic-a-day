@@ -9,13 +9,13 @@
   </div>
     <div class="pagination clearfix">
       <% if pictures.previous_page %>
-        <%= link_to "&laquo; Previous", picture_path(picture, :page => pictures.previous_page), :class => "prev_page", :rel => "prev" %>
+        <%= link_to "&laquo; Previous", picture.nil? ? home_path(:page => pictures.previous_page) : picture_path(picture, :page => pictures.previous_page), :class => "prev_page", :rel => "prev" %>
       <% else %>
         <span class="disabled prev_page">&laquo; Previous</span> 
       <% end %>
       
       <% if pictures.next_page %>
-        <%= link_to "Next &raquo;", picture_path(picture, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
+        <%= link_to "Next &raquo;", picture.nil? ? home_path(:page => pictures.previous_page) : picture_path(picture, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
       <% else %>
         <span class="disabled next_page">Next &raquo;</span> 
       <% end %>
