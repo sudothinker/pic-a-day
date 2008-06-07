@@ -2,10 +2,7 @@
   <%= render :partial => "picture", :locals => {:picture => @picture, :next_picture => @next_picture} %>
 </div>
 
-<div class="pagination-inline">
-  <%= link_to "&laquo; Older Picture", picture_path(@prev_picture) if @prev_picture %>
-  <%= link_to "Newer Picture &raquo;", picture_path(@next_picture) if @next_picture %>
-</div>
+<%= render_pictures @pictures %>
 
 <div class="picture-actions clearfix">
   <div class="wall-and-form">
