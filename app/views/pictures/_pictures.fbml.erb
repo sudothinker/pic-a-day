@@ -7,15 +7,15 @@
     </dl>
     <% end %>
   </div>
-    <div class="pagination">
+    <div class="pagination clearfix">
       <% if pictures.previous_page %>
-        <a href="/apictureeveryday/pictures/?page=<%= pictures.previous_page %>" class="prev_page" rel="prev">&laquo; Previous</a>
+        <%= link_to "&laquo; Previous", picture_path(p, :page => pictures.previous_page), :class => "prev_page", :rel => "prev" %>
       <% else %>
         <span class="disabled prev_page">&laquo; Previous</span> 
       <% end %>
       
       <% if pictures.next_page %>
-        <a href="/apictureeveryday/pictures/?page=<%= pictures.next_page %>" class="next_page" rel="next">Next &raquo;</a>
+        <%= link_to "Next &raquo;", picture_path(p, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
       <% else %>
         <span class="disabled next_page">Next &raquo;</span> 
       <% end %>
