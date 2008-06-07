@@ -13,7 +13,7 @@ module ApplicationHelper
     come_back = "<span class=\"highlight\">Come back tomorrow, and take another picture of yourself.</span>"
     more_options = "More to come after you've taken a few more pictures."
     
-    case pictures.size
+    case pictures.total_entries
     when 0
       default
     when 1..2
