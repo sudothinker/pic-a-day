@@ -2,25 +2,22 @@
   <div id="picture-carousel" class="clearfix">
     <% pictures.each do |p| %>
     <dl class="picture <%= 'selected' if p == picture %>">
-      <dd class="thumb"><%= link_to image_tag(p.thumb.authenticated_s3_url), picture_path(p) %></dd>
+      <dd class="thumb"><%= link_to image_tag(p.thumb.authenticated_s3_url), picture_path(p, :page => params[:page]) %></dd>
       <dt class="desc"><%= p.created_at.strftime("%B %d, %Y") %></dt>
     </dl>
     <% end %>
   </div>
-  <% content_for(:pagination) do %>
-  
-      <div class="pagination">
-        <% if pictures.previous_page %>
-          <a href="/apictureeveryday/pictures/?page=<%= pictures.previous_page %>" class="prev_page" rel="prev">&laquo; Previous</a>
-        <% else %>
-          <span class="disabled prev_page">&laquo; Previous</span> 
-        <% end %>
-        
-        <% if pictures.next_page %>
-          <a href="/apictureeveryday/pictures/?page=<%= pictures.next_page %>" class="next_page" rel="next">Next &raquo;</a>
-        <% else %>
-          <span class="disabled next_page">Next &raquo;</span> 
-        <% end %>
-      </div>
-  <% end %>
+  <div class="pagination clearfix">
+    <% if pictures.previous_page %>
+      <%= link_to "&laquo; Previous", picture.nil? ? home_path(:page => pictures.previous_page) : picture_path(picture, :page => pictures.previous_page), :class => "prev_page", :rel => "prev" %>
+    <% else %>
+      <span class="disabled prev_page">&laquo; Previous</span> 
+    <% end %>
+    
+    <% if pictures.next_page %>
+      <%= link_to "Next &raquo;", picture.nil? ? home_path(:page => pictures.next_page) : picture_path(picture, :page => pictures.next_page), :class => "next_page", :rel => "next" %>
+    <% else %>
+      <span class="disabled next_page">Next &raquo;</span> 
+    <% end %>
+  </div>
 <% end %>

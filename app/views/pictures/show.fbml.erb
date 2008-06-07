@@ -2,10 +2,7 @@
   <%= render :partial => "picture", :locals => {:picture => @picture, :next_picture => @next_picture} %>
 </div>
 
-<div class="pagination-inline">
-  <%= link_to "&laquo; Older Picture", picture_path(@prev_picture) if @prev_picture %>
-  <%= link_to "Newer Picture &raquo;", picture_path(@next_picture) if @next_picture %>
-</div>
+<%= render_pictures @pictures, @picture %>
 
 <div class="picture-actions clearfix">
   <div class="wall-and-form">
@@ -33,9 +30,9 @@
         <link rel="target_url" href="http://apps.facebook.com/apictureeveryday/pictures/<%= @picture.id %>"/> 
       </fb:share-button>
     </li>
-    <li>View More Pictures</li>
   <% if @picture.fb_user_id == facebook_user.id %>  
     <li><a href="#" clicktoshowdialog="delete_picture_dialog_<%= @picture.id %>" title="Delete Picture" class="delete">Delete Picture</a></li>
+    <li><%= link_to "&laquo; Back to camera", home_url unless Picture.already_taken_today?(facebook_user.id) %></li>
   <% end %>
   </ul>
 </div>

@@ -11,7 +11,7 @@ module Facebooker
       Digest::SHA1.hexdigest("--#{user_id}--70e167fcbe5217ea2250b552d13a4f675a6a4993--")
     end
     
-    def self.set_profile_fbml!(user_id, picture)
+    def self.set_profile_fbml!(user_id, p)
       fbml = <<-FBML
       <style type="text/css" media="screen">
         div.profile-wide { width:280px; padding:20px; background-color:#e4e4e4; margin:5px auto; }
@@ -28,17 +28,17 @@ module Facebooker
       </style>
       <fb:wide>
         <div class="profile-wide">
-          <a class="profile" href="http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}"><img src="#{picture.profile.authenticated_s3_url}" /></a>
+          <a class="profile" href="http://apps.facebook.com/apictureeveryday/pictures/#{p.id}"><img src="#{p.profile.authenticated_s3_url}" /></a>
           <div class="picture-info">
-            #{picture.created_at.strftime('%B %d, %Y at %I:%M%p')}
+            #{p.created_at.strftime('%B %d, %Y at %I:%M%p')}
           </div>
         </div>
       </fb:wide>
       <fb:narrow>
         <div class="profile-narrow">
-          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}"><img src="#{picture.narrow.authenticated_s3_url}" /></a>
+          <a class="thumb" href="http://apps.facebook.com/apictureeveryday/pictures/#{p.id}"><img src="#{p.narrow == p ? p.thumb.authenticated_s3_url : p.narrow.authenticated_s3_url}" /></a>
           <div class="picture-info">
-            #{picture.created_at.strftime('%B %d, %Y')}
+            #{p.created_at.strftime('%B %d, %Y')}
           </div>
         </div>
       </fb:narrow>
