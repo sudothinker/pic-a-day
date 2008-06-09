@@ -8,7 +8,7 @@ class Comment < ActiveRecord::Base
     story = Facebooker::Feed::Action.new
     story.title = "<fb:name uid=\"#{self.fb_user_id}\" useyou=\"false\" capitalize=\"true\" /> commented on <fb:name uid=\"#{self.picture.fb_user_id}\" useyou=\"false\" capitalize=\"true\" />'s picture"
     story.image_1 = self.picture.thumb.authenticated_s3_url
-    story.image_1_link = "http://apps.facebook.com/apictureeveryday/pictures/#{self.id}"
+    story.image_1_link = "http://apps.facebook.com/apictureeveryday/pictures/#{self.picture.id}"
     story.body = %("#{self.text}")
     story
   end
