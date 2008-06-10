@@ -8,6 +8,10 @@ class PicturesController < ApplicationController
   
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
+    begin
+      facebook_user.publish_action(@last_picture.story) if params[:post_story]
+    rescue Facebooker::Session::TooManyUserActionCalls
+    end
     redirect_to picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
     @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
@@ -48,7 +52,7 @@ class PicturesController < ApplicationController
   end
   
   def redirector
-    redirect_to home_path
+    redirect_to home_path(:post_story => true)
   end
   
   # fb_user_id + "|" + user_hash + "|" + fb_page_id + "|" + fb_sig_is_admin + "|" + fb_sig_page_added + "|" + Base64.encodeByteArray(png);

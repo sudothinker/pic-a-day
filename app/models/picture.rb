@@ -45,7 +45,7 @@ class Picture < ActiveRecord::Base
     story.title = %(<fb:name uid="#{self.fb_user_id}" useyou="false" capitalize="true" /> took a picture of themselves today)
     story.image_1 = self.thumb.authenticated_s3_url
     story.image_1_link = "http://apps.facebook.com/apictureeveryday/pictures/#{self.id}"
-    story.body = %(Join in! <a href="http://apps.facebook.com/apictureeveryday">Take a picture of yourself today.</a>)
+    story.body = %(Join in! <a href="http://apps.facebook.com/apictureeveryday">Take a picture of yourself today</a>.)
     story
   end
   
