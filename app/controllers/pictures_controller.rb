@@ -9,7 +9,7 @@ class PicturesController < ApplicationController
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
     begin
-      facebook_user.publish_action(@last_picture.story) if params[:post_story]
+      facebook_user.publish_action(@last_picture.story(facebook_user.sex)) if params[:post_story]
     rescue Facebooker::Session::TooManyUserActionCalls
     end
     redirect_to picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
