@@ -79,7 +79,8 @@ class PicturesController < ApplicationController
   
   protected
     def find_picture
-      @picture = Picture.find(params[:id], :conditions => "parent_id IS NULL")
-      redirect_to home_url and return false if @picture.nil? || (!facebook_user.self_or_in_friends?(@picture.fb_user_id) && @picture.fb_page_id.blank?)
+      @picture = Picture.find_with_deleted(params[:id], :conditions => "parent_id IS NULL")
+      can_view_picture = !@picture.nil? && @picture.deleted_at.nil? && (facebook_user.self_or_in_friends?(@picture.fb_user_id) || !@picture.fb_page_id.nil?)
+      redirect_to home_url and return false unless can_view_picture
     end
 end

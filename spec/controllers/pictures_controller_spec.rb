@@ -71,3 +71,42 @@ describe "misc specs" do
   end
   
 end
+
+describe "Requesting /pictures/1 using GET" do
+  controller_name :pictures
+  
+  before do
+    controller.stub!(:ensure_application_is_installed_by_facebook_user).and_return(true)
+    controller.stub!(:ensure_authenticated_to_facebook).and_return(true)
+    @user = mock('user', :self_or_in_friends? => true)
+    controller.stub!(:facebook_user).and_return(@user)
+    @picture = mock_model(Picture, :deleted_at => nil, :fb_user_id => 2, :fb_page_id => nil)
+    Picture.stub!(:find_with_deleted).and_return(@picture)
+  end
+  
+  it "should redirect to home_url if picture is nil" do
+    Picture.stub!(:find_with_deleted).and_return(nil)
+    get :show, :id => 1
+    response.should redirect_to(home_url)
+  end
+  
+  it "should redirect to home_url if picture is deleted" do
+    @picture.stub!(:deleted_at).and_return(Time.now)
+    get :show, :id => 1
+    response.should redirect_to(home_url)
+  end
+  
+  it "should redirect to home_url if picture belongs to someone who is not your friend and there is no page_id" do
+    @user.stub!(:self_or_in_friends?).and_return(false)
+    get :show, :id => 1
+    response.should redirect_to(home_url)
+  end
+  
+  it "should not redirect if the picture has a page id" do
+    @picture.stub!(:fb_page_id).and_return(2)
+    get :show, :id => 1
+    response.should be_success
+  end
+  
+  
+end
