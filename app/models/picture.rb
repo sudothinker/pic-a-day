@@ -29,7 +29,7 @@ class Picture < ActiveRecord::Base
     i.write(filename)
     p.temp_data=File.read(filename)
     File.delete(filename)
-    p.save
+    p.save!
     return p
   end
   
