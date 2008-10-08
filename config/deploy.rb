@@ -36,6 +36,13 @@ task :reload_mongrel do
   CMD
 end
 
+desc "Stop Mongrels"
+task :stop_mongrel do
+  run <<-CMD 
+    cd #{release_path} && mongrel_rails cluster::stop
+  CMD
+end
+
 desc "Reload Nginx"
 task :reload_nginx do
   sudo "/etc/init.d/nginx reload"
