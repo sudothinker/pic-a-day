@@ -8,6 +8,11 @@ class PicturesController < ApplicationController
   
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
+    begin
+      PicadayPublisher.deliver_action(facebook_user) if params[:post_story]
+      #facebook_user.publish_action(@last_picture.story(facebook_user.sex)) if params[:post_story]
+    rescue #Facebooker::Session::TooManyUserActionCalls
+    end
     redirect_to picture_path(@last_picture) if @last_picture && @last_picture.taken_today?
     @user_hash = Facebooker::User.generate_hash(facebook_user.id)
     @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
@@ -15,7 +20,11 @@ class PicturesController < ApplicationController
   
   def show
     @next_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND id > ?", @picture.fb_page_id || @picture.fb_user_id, params[:id]], :order => "id ASC")
-    @pictures = Picture.paginate_by_fb_user_id(facebook_user.id, :page => params[:page], :per_page => 6, :order => "id DESC")
+    if @picture.fb_page_id
+      @pictures = Picture.paginate(:conditions => ["fb_page_id = ?", @picture.fb_page_id], :page => params[:page], :per_page => 6, :order => "id DESC")
+    else
+      @pictures = Picture.paginate(:conditions => ["fb_user_id = ? AND fb_page_id IS NULL", @picture.fb_user_id], :page => params[:page], :per_page => 6, :order => "id DESC")
+    end
   end
   
   def upload
@@ -28,10 +37,6 @@ class PicturesController < ApplicationController
     @picture.fb_user_id = facebook_user.id
     @picture.fb_page_id = fb_page_id
     if @picture.save
-      begin
-        facebook_user.publish_action(@picture.story)
-      rescue Facebooker::Session::TooManyUserActionCalls
-      end
       Facebooker::User.set_profile_fbml!(@picture.fb_page_id || @picture.fb_user_id, @picture)
       redirect_to "http://apps.facebook.com/apictureeveryday/pictures/#{@picture.id}"
     else
@@ -48,7 +53,7 @@ class PicturesController < ApplicationController
   end
   
   def redirector
-    redirect_to home_path
+    redirect_to home_path(:post_story => true)
   end
   
   # fb_user_id + "|" + user_hash + "|" + fb_page_id + "|" + fb_sig_is_admin + "|" + fb_sig_page_added + "|" + Base64.encodeByteArray(png);
@@ -75,7 +80,8 @@ class PicturesController < ApplicationController
   
   protected
     def find_picture
-      @picture = Picture.find(params[:id], :conditions => "parent_id IS NULL")
-      redirect_to home_url and return false if @picture.nil? || (!facebook_user.self_or_in_friends?(@picture.fb_user_id) && @picture.fb_page_id.blank?)
+      @picture = Picture.find_with_deleted(params[:id], :conditions => "parent_id IS NULL")
+      can_view_picture = !@picture.nil? && @picture.deleted_at.nil? && (facebook_user.self_or_in_friends?(@picture.fb_user_id) || !@picture.fb_page_id.nil?)
+      redirect_to home_url and return false unless can_view_picture
     end
 end
