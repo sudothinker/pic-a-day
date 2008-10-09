@@ -9,7 +9,7 @@ class PicturesController < ApplicationController
   def index
     @last_picture = Picture.find(:first, :conditions => ["fb_user_id = ? AND thumbnail IS NULL", facebook_user.id], :order => "id DESC")    
     begin
-      PicadayPublisher.templatized_news_feed(facebook_user, @last_picture) if params[:post_story]
+      PicadayPublisher.deliver_templatized_news_feed(facebook_user, @last_picture) if params[:post_story]
     rescue Exception => exception
       ExceptionNotifier.deliver_exception_notification(exception, self, request)
     end
