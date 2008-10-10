@@ -1,0 +1,7 @@
+<p>Total: <%= @pictures.size %></p>
+
+<ul>
+  <% @pictures.each do |p| %>
+    <li>FB User <%= p.fb_user_id %> took <%= link_to p.id, "http://apps.facebook.com/apictureeveryday/pictures/#{p.id}" %></li>
+  <% end %>
+</ul>
