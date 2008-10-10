@@ -2,6 +2,6 @@
 
 <ul>
   <% @pictures.each do |p| %>
-    <li>FB User <%= p.fb_user_id %> took <%= link_to p.id, "http://apps.facebook.com/apictureeveryday/pictures/#{p.id}" %></li>
+    <li>FB User <%= link_to p.fb_user_id, "http://www.facebook.com/profile.php?id=#{p.fb_user_id}" %> took <%= link_to p.id, "http://apps.facebook.com/apictureeveryday/pictures/#{p.id}" %></li>
   <% end %>
 </ul>
