@@ -9,12 +9,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 6) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "comments", :force => true do |t|
     t.text     "text"
     t.integer  "picture_id"
     t.integer  "fb_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "facebook_templates", :force => true do |t|
+    t.string   "bundle_id"
+    t.string   "template_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

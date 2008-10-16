@@ -8,6 +8,10 @@ class UserTest < Test::Unit::TestCase
     @session = Facebooker::Session.create('apikey', 'secretkey')
     @user = Facebooker::User.new(1234, @session)
     @other_user = Facebooker::User.new(4321, @session)
+    ENV['FACEBOOK_CANVAS_PATH'] ='facebook_app_name'
+    ENV['FACEBOOK_API_KEY'] = '1234567'
+    ENV['FACEBOOK_SECRET_KEY'] = '7654321'
+    
     @user.friends = [@other_user]
   end
   
@@ -17,6 +21,28 @@ class UserTest < Test::Unit::TestCase
   
   def test_can_ask_user_if_he_or_she_is_friends_with_another_user_by_user_id
     assert(@user.friends_with?(@other_user.id))
+  end
+  
+  def test_cast_to_friend_list_id_with_nil
+    assert_nil @user.cast_to_friend_list_id(nil)
+  end
+  def test_cast_to_friend_list_id_with_integer
+    assert_equal 14,@user.cast_to_friend_list_id(14)
+  end
+  def test_cast_to_friend_list_id_with_string
+    @user.expects(:friend_lists).returns([Facebooker::FriendList.new(:flid=>199,:name=>"Work")])
+    assert_equal 199,@user.cast_to_friend_list_id("Work")
+  end
+  def test_cast_to_friend_list_id_with_friend_list
+    assert_equal 199,@user.cast_to_friend_list_id(Facebooker::FriendList.new(:flid=>199,:name=>"Work"))
+  end
+  
+  def test_cast_to_friend_list_id_with_invalid_string_raises
+    @user.expects(:friend_lists).returns([Facebooker::FriendList.new(:flid=>1,:name=>"Not Picked")])
+    assert_nil @user.cast_to_friend_list_id("Something")
+    fail("No exception raised, Expected Facebooker::Session::InvalidFriendList")
+  rescue   Facebooker::Session::InvalidFriendList
+    nil
   end
   
   def test_can_create_from_current_session
@@ -38,9 +64,19 @@ class UserTest < Test::Unit::TestCase
     @user.profile_fbml="test"
   end
   
+  def test_can_set_profile_main
+    @user.expects(:set_profile_fbml).with(nil,nil,nil,"test")
+    @user.profile_main="test"
+  end
+  
   def test_can_call_set_profile_fbml
-    @session.expects(:post).with('facebook.profile.setFBML', :uid=>1234,:profile=>"profile",:profile_action=>"action",:mobile_profile=>"mobile")
+    @session.expects(:post).with('facebook.profile.setFBML', {:uid=>1234,:profile=>"profile",:profile_action=>"action",:mobile_profile=>"mobile"},false)
     @user.set_profile_fbml("profile","mobile","action")
+  end
+  
+  def test_can_call_set_profile_fbml_with_profile_main
+    @session.expects(:post).with('facebook.profile.setFBML', {:uid=>1234,:profile=>"profile",:profile_action=>"action",:mobile_profile=>"mobile", :profile_main => 'profile_main'},false)
+    @user.set_profile_fbml("profile","mobile","action",'profile_main')
   end
   
   def test_can_get_profile_photos
@@ -73,8 +109,49 @@ class UserTest < Test::Unit::TestCase
     @user.send_email("subject", nil, "body fbml")
   end
   
+  def test_can_set_status_with_string
+    @session.expects(:post).with('facebook.users.setStatus', :status=>"my status",:status_includes_verb=>1)
+    @user.status="my status"
+  end
+  
+  def test_get_events
+    @user = Facebooker::User.new(9507801, @session)
+    expect_http_posts_with_responses(example_events_get_xml)
+    events = @user.events
+    assert_equal "29511517904", events.first.eid
+  end
+  
+  def test_can_get_events
+    @user.expects(:events)
+    @user.events
+  end
+  
   def test_to_s
     assert_equal("1234",@user.to_s)
+  end
+  
+  def test_equality
+    assert_equal @user, @user.dup
+  end
+  
+  def test_hash_email
+    assert_equal "4228600737_c96da02bba97aedfd26136e980ae3761", Facebooker::User.hash_email("mary@example.com")
+  end
+  def test_hash_email_not_normalized
+    assert_equal "4228600737_c96da02bba97aedfd26136e980ae3761", Facebooker::User.hash_email(" MaRy@example.com  ")
+  end
+  
+  def test_register_with_array
+    expect_http_posts_with_responses(["4228600737_c96da02bba97aedfd26136e980ae3761"].to_json)
+    assert_equal ["4228600737_c96da02bba97aedfd26136e980ae3761"],Facebooker::User.register([{:email=>"mary@example.com",:account_id=>1}])
+  end
+  
+  def test_failed_registration
+    expect_http_posts_with_responses([""].to_json)
+    Facebooker::User.register([{:email=>"mary@example.com",:account_id=>1}])
+    fail "Expected UserRegistrationFailed to be raised but it wasn't"
+  rescue Facebooker::Session::UserRegistrationFailed=>e
+    assert_equal({:email=>"mary@example.com",:account_id=>1},e.failed_users.first)
   end
   
   private
@@ -108,4 +185,35 @@ class UserTest < Test::Unit::TestCase
     </photos_get_response>"
   end
   
+  def example_events_get_xml
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+    <events_get_response xmlns=\"http://api.facebook.com/1.0/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd\" list=\"true\">
+      <event>
+        <eid>29511517904</eid>
+        <name>PUMA SALE</name>
+        <tagline/>
+        <nid>0</nid>
+        <pic>http://profile.ak.facebook.com/object3/370/66/s29511517904_6952.jpg</pic>
+        <pic_big>http://profile.ak.facebook.com/object3/370/66/n29511517904_6952.jpg</pic_big>
+        <pic_small>http://profile.ak.facebook.com/object3/370/66/t29511517904_6952.jpg</pic_small>
+        <host>PUMA</host>
+        <description>PUMA SALE</description>
+        <event_type>Education</event_type>
+        <event_subtype>Study Group</event_subtype>
+        <start_time>1212166800</start_time>
+        <end_time>1212364800</end_time>
+        <creator>1234261165</creator>
+        <update_time>1209768148</update_time>
+        <location>PUMA LOT</location>
+        <venue>
+          <street>5 LYBERTY WAY</street>
+          <city>Westford</city>
+          <state>Massachusetts</state>
+          <country>United States</country>
+          <latitude>42.5792</latitude>
+          <longitude>-71.4383</longitude>
+        </venue>
+      </event>
+    </events_get_response>"
+  end
 end

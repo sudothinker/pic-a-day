@@ -18,4 +18,8 @@ class PicadayPublisher < Facebooker::Rails::Publisher
     image_1(picture.thumb.authenticated_s3_url)
     image_1_link("http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}")
   end
+  
+  def publish_action_template
+    one_line_story_template %({*actor*} took a <a href="http://apps.facebook.com/apictureeveryday/pictures/{*picture*}">picture</a> today. <a href="http://apps.facebook.com/apictureeveryday">Take yours</a>.)
+  end  
 end

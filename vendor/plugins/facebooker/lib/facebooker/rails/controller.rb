@@ -1,14 +1,17 @@
 require 'facebooker'
+require 'facebooker/rails/profile_publisher_extensions'
 module Facebooker
   module Rails
     module Controller
+      include Facebooker::Rails::ProfilePublisherExtensions
       def self.included(controller)
         controller.extend(ClassMethods)
+        controller.before_filter :set_adapter
         controller.before_filter :set_fbml_format
         controller.helper_attr :facebook_session_parameters
-        
       end
-      
+
+    
       def facebook_session
         @facebook_session
       end
@@ -20,7 +23,7 @@ module Facebooker
       
       def set_facebook_session
         
-        returning session_set = session_already_secured? || secure_with_token! || secure_with_facebook_params!  do
+        returning session_set = session_already_secured? ||  secure_with_facebook_params! ||secure_with_token!  do
           if session_set
             capture_facebook_friends_if_available! 
             Session.current = facebook_session
@@ -35,9 +38,32 @@ module Facebooker
       private
       
       def session_already_secured?
-        (@facebook_session = session[:facebook_session]) && session[:facebook_session].secured?
+        (@facebook_session = session[:facebook_session]) && session[:facebook_session].secured? if valid_session_key_in_session?
       end
       
+      def user_has_deauthorized_application?
+        # if we're inside the facebook session and there is no session key,
+        # that means the user revoked our access
+        # we don't want to keep using the old expired key from the cookie. 
+        request_is_for_a_facebook_canvas? and params[:fb_sig_session_key].blank?
+      end
+      
+      def clear_facebook_session_information
+        session[:facebook_session] = nil
+        @facebook_session=nil        
+      end
+      
+      def valid_session_key_in_session?
+        #before we access the facebook_params, make sure we have the parameters
+        #otherwise we will blow up trying to access the secure parameters
+        if user_has_deauthorized_application?
+          clear_facebook_session_information
+          false
+        else
+          !session[:facebook_session].blank? &&  (params[:fb_sig_session_key].blank? || session[:facebook_session].session_key == facebook_params[:session_key])
+        end
+      end
+            
       def secure_with_token!
         if params['auth_token']
           @facebook_session = new_facebook_session
@@ -57,14 +83,20 @@ module Facebooker
         end
       end
       
+      #override to specify where the user should be sent after logging in
+      def after_facebook_login_url
+        nil
+      end
+      
       def create_new_facebook_session_and_redirect!
         session[:facebook_session] = new_facebook_session
-        redirect_to session[:facebook_session].login_url unless @installation_required
+        url_params = after_facebook_login_url.nil? ? {} : {:next=>after_facebook_login_url}
+        redirect_to session[:facebook_session].login_url(url_params) unless @installation_required
         false
       end
       
       def new_facebook_session
-        Facebooker::Session.create(Facebooker::Session.api_key, Facebooker::Session.secret_key)
+        Facebooker::Session.create(Facebooker.api_key, Facebooker.secret_key)
       end
       
       def capture_facebook_friends_if_available!
@@ -118,7 +150,7 @@ module Facebooker
       end
       
       def redirect_to(*args)
-        if request_is_for_a_facebook_canvas?
+        if request_is_for_a_facebook_canvas? and !request_is_facebook_tab?
           render :text => fbml_redirect_tag(*args)
         else
           super
@@ -132,6 +164,11 @@ module Facebooker
       def request_is_for_a_facebook_canvas?
         !params['fb_sig_in_canvas'].blank?
       end
+      
+      def request_is_facebook_tab?
+        !params["fb_sig_in_profile_tab"].blank?
+      end
+      
       def request_is_facebook_ajax?
         params["fb_sig_is_mockajax"]=="1" || params["fb_sig_is_ajax"]=="1"
       end
@@ -143,6 +180,24 @@ module Facebooker
       
       def application_is_installed?
         facebook_params['added']
+      end
+      
+      def ensure_has_status_update
+        has_extended_permission?("status_update") || application_needs_permission("status_update")
+      end
+      def ensure_has_photo_upload
+        has_extended_permission?("photo_upload") || application_needs_permission("photo_upload")
+      end
+      def ensure_has_create_listing
+        has_extended_permission?("create_listing") || application_needs_permission("create_listing")
+      end
+      
+      def application_needs_permission(perm)
+        redirect_to(facebook_session.permission_url(perm))
+      end
+      
+      def has_extended_permission?(perm)
+        params["fb_sig_ext_perms"] and params["fb_sig_ext_perms"].include?(perm)
       end
       
       def ensure_authenticated_to_facebook
@@ -163,6 +218,10 @@ module Facebooker
       def set_fbml_format
         params[:format]="fbml" if request_is_for_a_facebook_canvas? or request_is_facebook_ajax?
       end
+      def set_adapter
+        Facebooker.load_adapter(params) if(params[:fb_sig_api_key])
+      end
+
       
       module ClassMethods
         #

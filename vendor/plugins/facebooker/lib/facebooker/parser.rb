@@ -89,6 +89,12 @@ module Facebooker
       element('auth_createToken_response', data).text_value
     end
   end
+  
+  class RegisterUsers
+    def self.process(data)
+      Facebooker.json_decode(data)
+    end
+  end
 
   class GetSession < Parser#:nodoc:
     def self.process(data)      
@@ -101,6 +107,12 @@ module Facebooker
       array_of_text_values(element('friends_get_response', data), 'uid')
     end
   end
+  
+  class FriendListsGet < Parser#:nodoc:
+    def self.process(data)
+      array_of_hashes(element('friends_getLists_response', data), 'friendlist')
+    end
+  end
  
   class UserInfo < Parser#:nodoc:
     def self.process(data)
@@ -108,9 +120,51 @@ module Facebooker
     end
   end
   
+  class GetLoggedInUser < Parser#:nodoc:
+    def self.process(data)
+      Integer(element('users_getLoggedInUser_response', data).text_value)
+    end
+  end
+
+  class PagesIsAdmin < Parser#:nodoc:
+    def self.process(data)
+      element('pages_isAdmin_response', data).text_value == '1'
+    end
+  end
+
+  class PagesGetInfo < Parser#:nodoc:
+    def self.process(data)
+      array_of_hashes(element('pages_getInfo_response', data), 'page')
+    end
+  end
+
   class PublishStoryToUser < Parser#:nodoc:
     def self.process(data)
       element('feed_publishStoryToUser_response', data).text_value
+    end
+  end
+
+  class RegisterTemplateBundle < Parser#:nodoc:
+    def self.process(data)
+      element('feed_registerTemplateBundle_response', data).text_value.to_i
+    end
+  end
+
+  class GetRegisteredTemplateBundles < Parser
+    def self.process(data)
+      array_of_hashes(element('feed_getRegisteredTemplateBundles_response',data), 'template_bundle')
+    end
+  end
+
+  class DeactivateTemplateBundleByID < Parser#:nodoc:
+    def self.process(data)
+      element('feed_deactivateTemplateBundleByID_response', data).text_value == '1'
+    end
+  end
+
+  class PublishUserAction < Parser#:nodoc:
+    def self.process(data)
+      element('feed_publishUserAction_response', data).children[1].text_value == "1"
     end
   end
   
@@ -147,15 +201,15 @@ module Facebooker
   class BatchRun < Parser #:nodoc:
     class << self
       def current_batch=(current_batch)
-        @current_batch=current_batch
+        Thread.current[:facebooker_current_batch]=current_batch
       end
       def current_batch
-        @current_batch
+        Thread.current[:facebooker_current_batch]
       end
     end
     def self.process(data)
       array_of_text_values(element('batch_run_response',data),"batch_run_response_elt").each_with_index do |response,i|
-        batch_request=@current_batch[i]
+        batch_request=current_batch[i]
         body=Struct.new(:body).new
         body.body=CGI.unescapeHTML(response)
         begin
@@ -242,6 +296,18 @@ module Facebooker
   class ProfileFBMLSet < Parser#:nodoc:
     def self.process(data)
       element('profile_setFBML_response', data).text_value
+    end
+  end
+  
+  class ProfileInfo < Parser#:nodoc:
+    def self.process(data)
+      hashinate(element('profile_getInfo_response info_fields', data))
+    end
+  end
+  
+  class ProfileInfoSet < Parser#:nodoc:
+    def self.process(data)
+      element('profile_setInfo_response', data).text_value
     end
   end
   
@@ -340,6 +406,12 @@ module Facebooker
       end
     end
   end
+  
+  class SetStatus < Parser
+    def self.process(data)
+      element('users_setStatus_response',data).text_value == '1'
+    end
+  end
     
   class Errors < Parser#:nodoc:
     EXCEPTIONS = {
@@ -353,9 +425,11 @@ module Facebooker
       103 => Facebooker::Session::CallOutOfOrder,
       104 => Facebooker::Session::IncorrectSignature,
       120 => Facebooker::Session::InvalidAlbumId,
+      250 => Facebooker::Session::ExtendedPermissionRequired,
       321 => Facebooker::Session::AlbumIsFull,
       324 => Facebooker::Session::MissingOrInvalidImageFile,
       325 => Facebooker::Session::TooManyUnapprovedPhotosPending,
+      330 => Facebooker::Session::TemplateDataMissingRequiredTokens,
       340 => Facebooker::Session::TooManyUserCalls,
       341 => Facebooker::Session::TooManyUserActionCalls,
       342 => Facebooker::Session::InvalidFeedTitleLink,
@@ -377,13 +451,15 @@ module Facebooker
       603 => Facebooker::Session::FQLTableDoesNotExist,
       604 => Facebooker::Session::FQLStatementNotIndexable,
       605 => Facebooker::Session::FQLFunctionDoesNotExist,
-      606 => Facebooker::Session::FQLWrongNumberArgumentsPassedToFunction
+      606 => Facebooker::Session::FQLWrongNumberArgumentsPassedToFunction,
+      807 => Facebooker::Session::TemplateBundleInvalid
     }
     def self.process(data)
       response_element = element('error_response', data) rescue nil
       if response_element
         hash = hashinate(response_element)
-        raise EXCEPTIONS[Integer(hash['error_code'])].new(hash['error_msg'])
+        exception = EXCEPTIONS[Integer(hash['error_code'])] || StandardError
+        raise exception.new(hash['error_msg'])
       end
     end
   end
@@ -392,18 +468,30 @@ module Facebooker
     PARSERS = {
       'facebook.auth.createToken' => CreateToken,
       'facebook.auth.getSession' => GetSession,
+      'facebook.connect.registerUsers' => RegisterUsers,
       'facebook.users.getInfo' => UserInfo,
+      'facebook.users.setStatus' => SetStatus,
+      'facebook.users.getLoggedInUser' => GetLoggedInUser,
+      'facebook.pages.isAdmin' => PagesIsAdmin,
+      'facebook.pages.getInfo' => PagesGetInfo,
       'facebook.friends.get' => GetFriends,
+      'facebook.friends.getLists' => FriendListsGet,
       'facebook.friends.areFriends' => AreFriends,
       'facebook.friends.getAppUsers' => GetAppUsers,
       'facebook.feed.publishStoryToUser' => PublishStoryToUser,
       'facebook.feed.publishActionOfUser' => PublishActionOfUser,
       'facebook.feed.publishTemplatizedAction' => PublishTemplatizedAction,
+      'facebook.feed.registerTemplateBundle' => RegisterTemplateBundle,
+      'facebook.feed.deactivateTemplateBundleByID' => DeactivateTemplateBundleByID,
+      'facebook.feed.getRegisteredTemplateBundles' => GetRegisteredTemplateBundles,
+      'facebook.feed.publishUserAction' => PublishUserAction,
       'facebook.notifications.get' => NotificationsGet,
       'facebook.notifications.send' => NotificationsSend,
       'facebook.notifications.sendRequest' => SendRequest,
       'facebook.profile.getFBML' => ProfileFBML,
       'facebook.profile.setFBML' => ProfileFBMLSet,
+      'facebook.profile.getInfo' => ProfileInfo,
+      'facebook.profile.setInfo' => ProfileInfoSet,
       'facebook.fbml.setRefHandle' => SetRefHandle,
       'facebook.fbml.refreshRefUrl' => RefreshRefURL,
       'facebook.fbml.refreshImgSrc' => RefreshImgSrc,
@@ -425,7 +513,6 @@ module Facebooker
       'facebook.events.getMembers' => EventMembersGet,
       'facebook.groups.getMembers' => GroupGetMembers,
       'facebook.notifications.sendEmail' => NotificationsSendEmail
-      
     }
   end
 end

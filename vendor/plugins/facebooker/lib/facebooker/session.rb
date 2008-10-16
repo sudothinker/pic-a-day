@@ -1,4 +1,3 @@
-require 'digest/md5'
 require 'cgi'
 
 module Facebooker
@@ -27,6 +26,7 @@ module Facebooker
     class FeedBodyLengthTooLong < StandardError; end
     class InvalidFeedPhotoSource < StandardError; end
     class InvalidFeedPhotoLink < StandardError; end    
+    class TemplateDataMissingRequiredTokens < StandardError; end
     class FeedMarkupInvalid < StandardError; end
     class FeedTitleDataInvalid < StandardError; end
     class FeedTitleTemplateInvalid < StandardError; end
@@ -34,6 +34,7 @@ module Facebooker
     class FeedBodyTemplateInvalid < StandardError; end
     class FeedPhotosNotRetrieved < StandardError; end
     class FeedTargetIdsInvalid < StandardError; end
+    class TemplateBundleInvalid < StandardError; end
     class ConfigurationMissing < StandardError; end
     class FQLParseError < StandardError; end
     class FQLFieldDoesNotExist < StandardError; end
@@ -45,10 +46,15 @@ module Facebooker
     class AlbumIsFull < StandardError; end
     class MissingOrInvalidImageFile < StandardError; end
     class TooManyUnapprovedPhotosPending < StandardError; end
-  
-    API_SERVER_BASE_URL       = "api.facebook.com"
+    class ExtendedPermissionRequired < StandardError; end
+    class InvalidFriendList < StandardError; end
+    class UserRegistrationFailed < StandardError
+      attr_accessor :failed_users
+    end
+    
+    API_SERVER_BASE_URL       = ENV["FACEBOOKER_API"] == "new" ? "api.new.facebook.com" : "api.facebook.com"
     API_PATH_REST             = "/restserver.php"
-    WWW_SERVER_BASE_URL       = "www.facebook.com"
+    WWW_SERVER_BASE_URL       = ENV["FACEBOOKER_API"] == "new" ? "www.new.facebook.com" : "www.facebook.com"
     WWW_PATH_LOGIN            = "/login.php"
     WWW_PATH_ADD              = "/add.php"
     WWW_PATH_INSTALL          = "/install.php"
@@ -81,29 +87,41 @@ module Facebooker
     
     def login_url(options={})
       options = default_login_url_options.merge(options)
-      "http://www.facebook.com/login.php?api_key=#{@api_key}&v=1.0#{login_url_optional_parameters(options)}"
+      "#{Facebooker.login_url_base(@api_key)}#{login_url_optional_parameters(options)}"
     end
-
+    
     def install_url(options={})
-      "http://www.facebook.com/install.php?api_key=#{@api_key}&v=1.0#{install_url_optional_parameters(options)}"
+      "#{Facebooker.install_url_base(@api_key)}#{install_url_optional_parameters(options)}"
     end
-
+    
+    def permission_url(permission,options={})
+      options = default_login_url_options.merge(options)
+      "http://#{Facebooker.www_server_base_url}/authorize.php?api_key=#{@api_key}&v=1.0&ext_perm=#{permission}#{install_url_optional_parameters(options)}"
+    end
+    
     def install_url_optional_parameters(options)
-      optional_parameters = []
-      optional_parameters << "&next=#{CGI.escape(options[:next])}" if options[:next]
+      optional_parameters = []      
+      optional_parameters += add_next_parameters(options)
       optional_parameters.join
     end
-
+    
+    def add_next_parameters(options)
+      opts = []
+      opts << "&next=#{CGI.escape(options[:next])}" if options[:next]
+      opts << "&next_cancel=#{CGI.escape(options[:next_cancel])}" if options[:next_cancel]
+      opts
+    end
+    
     def login_url_optional_parameters(options)
       # It is important that unused options are omitted as stuff like &canvas=false will still display the canvas. 
       optional_parameters = []
-      optional_parameters << "&next=#{CGI.escape(options[:next])}" if options[:next]
+      optional_parameters += add_next_parameters(options)
       optional_parameters << "&skipcookie=true" if options[:skip_cookie]
       optional_parameters << "&hide_checkbox=true" if options[:hide_checkbox]
       optional_parameters << "&canvas=true" if options[:canvas]
       optional_parameters.join
     end
-  
+    
     def default_login_url_options
       {}
     end
@@ -138,9 +156,9 @@ module Facebooker
       secure_with!(response['session_key'], response['uid'], response['expires'], response['secret'])
     end    
     
-    def secure_with!(session_key, uid, expires, secret_from_session = nil)
+    def secure_with!(session_key, uid = nil, expires = nil, secret_from_session = nil)
       @session_key = session_key
-      @uid = Integer(uid)
+      @uid = uid ? Integer(uid) : post('facebook.users.getLoggedInUser', :session_key => session_key)
       @expires = Integer(expires)
       @secret_from_session = secret_from_session
     end
@@ -191,8 +209,17 @@ module Facebooker
         end
       end
     end
-    
-    
+
+    def pages(options = {})
+      raise ArgumentError, 'fields option is mandatory' unless options.has_key?(:fields)
+      @pages ||= {}
+      @pages[options] ||= post('facebook.pages.getInfo', options) do |response|
+        response.map do |hash|
+          Page.from_hash(hash)
+        end
+      end
+    end
+
     #
     # Returns a proxy object for handling calls to Facebook cached items
     # such as images and FBML ref handles
@@ -265,17 +292,57 @@ module Facebooker
       if email_fbml
         params[:email] = email_fbml
       end
-      post 'facebook.notifications.send', params
+      params[:type]="user_to_user"
+      # if there is no uid, this is an announcement
+      unless uid?
+        params[:type]="app_to_user"
+      end
+      
+      post 'facebook.notifications.send', params,uid?
     end 
+    
+    ##
+    # Register a template bundle with Facebook.
+    # returns the template id to use to send using this template
+    def register_template_bundle(one_line_story_templates,short_story_templates=nil,full_story_template=nil)
 
+      if !one_line_story_templates.is_a?(Array)
+        one_line_story_templates = [one_line_story_templates]
+      end
+      parameters = {:one_line_story_templates=>one_line_story_templates.to_json}
+
+      
+      if !short_story_templates.blank?
+        short_story_templates = [short_story_templates] unless short_story_templates.is_a?(Array)
+        parameters[:short_story_templates]= short_story_templates.to_json
+      end
+
+      if !full_story_template.blank?
+        parameters[:full_story_template]= full_story_template.to_json
+      end
+      post("facebook.feed.registerTemplateBundle", parameters,false)
+    end
+    
+    ##
+    # publish a previously rendered template bundle
+    # see http://wiki.developers.facebook.com/index.php/Feed.publishUserAction
+    #
+    def publish_user_action(bundle_id,data={},target_ids=nil,body_general=nil)
+      parameters={:template_bundle_id=>bundle_id,:template_data=>data.to_json}
+      parameters[:target_ids] = target_ids unless target_ids.blank?
+      parameters[:body_general] = body_general unless body_general.blank?
+      post("facebook.feed.publishUserAction", parameters)
+    end
+    
+    
     ##
     # Send email to as many as 100 users at a time
-	  def send_email(user_ids, subject, text, fbml = nil) 			
-		  user_ids = Array(user_ids)
+    def send_email(user_ids, subject, text, fbml = nil) 			
+      user_ids = Array(user_ids)
       params = {:fbml => fbml, :recipients => user_ids.map{ |id| User.cast_to_facebook_id(id)}.join(','), :text => text, :subject => subject} 
       post 'facebook.notifications.sendEmail', params
     end
-
+    
     # Only serialize the bare minimum to recreate the session.
     def marshal_load(variables)#:nodoc:
       fields_to_serialize.each_with_index{|field, index| instance_variable_set_value(field, variables[index])}
@@ -313,13 +380,13 @@ module Facebooker
       def login_url
         super + "&auth_token=#{auth_token}"
       end
-
+      
       def secret_for_method(method_name)
         secret = auth_request_methods.include?(method_name) ? super : @secret_from_session
         secret
       end
       
-      def post(method, params = {})
+      def post(method, params = {},use_session=false)
         if method == 'facebook.profile.getFBML' || method == 'facebook.profile.setFBML'
           raise NonSessionUser.new("User #{@uid} is not the logged in user.") unless @uid == params[:uid]
         end
@@ -337,7 +404,7 @@ module Facebooker
     
     def add_to_batch(req,&proc)
       batch_request = BatchRequest.new(req,proc)
-      @batch_queue<<batch_request
+      Thread.current[:facebooker_current_batch_queue]<<batch_request
       batch_request
     end
     
@@ -378,34 +445,46 @@ module Facebooker
     #
     def batch(serial_only=false)
       @batch_request=true
-      @batch_queue=[]
+      Thread.current[:facebooker_current_batch_queue]=[]
       yield
       # Set the batch request to false so that post will execute the batch job
       @batch_request=false
-      BatchRun.current_batch=@batch_queue
-      post("facebook.batch.run",:method_feed=>@batch_queue.map{|q| q.uri}.to_json,:serial_only=>serial_only.to_s)
+      BatchRun.current_batch=Thread.current[:facebooker_current_batch_queue]
+      post("facebook.batch.run",:method_feed=>BatchRun.current_batch.map{|q| q.uri}.to_json,:serial_only=>serial_only.to_s)
     ensure
       @batch_request=false
       BatchRun.current_batch=nil
     end
     
-    def post(method, params = {},&proc)
+    def post_without_logging(method, params = {}, use_session_key = true, &proc)
       add_facebook_params(params, method)
-      @session_key && params[:session_key] ||= @session_key
+      use_session_key && @session_key && params[:session_key] ||= @session_key
       final_params=params.merge(:sig => signature_for(params))
       if batch_request?
         add_to_batch(final_params,&proc)
       else
-        result=service.post(final_params)
+        result = service.post(final_params)
         result = yield result if block_given?
         result
       end
     end
     
+    def post(method, params = {}, use_session_key = true, &proc)
+      if batch_request?
+        post_without_logging(method, params, use_session_key, &proc)
+      else
+        Logging.log_fb_api(method, params) do
+          post_without_logging(method, params, use_session_key, &proc)
+        end
+      end
+    end
+    
     def post_file(method, params = {})
-      add_facebook_params(params, method)
-      @session_key && params[:session_key] ||= @session_key
-      service.post_file(params.merge(:sig => signature_for(params.reject{|key, value| key.nil?})))
+      Logging.log_fb_api(method, params) do
+        add_facebook_params(params, method)
+        @session_key && params[:session_key] ||= @session_key
+        service.post_file(params.merge(:sig => signature_for(params.reject{|key, value| key.nil?})))
+      end
     end
     
     
@@ -424,29 +503,34 @@ module Facebooker
         hash[:call_id] = Time.now.to_f.to_s unless method == 'facebook.auth.getSession'
         hash[:v] = "1.0"
       end
-    
+      
+      # This ultimately delgates to the adapter
       def self.extract_key_from_environment(key_name)
-        val = ENV["FACEBOOK_" + key_name.to_s.upcase + "_KEY"]
+             Facebooker.send(key_name.to_s + "_key") rescue nil
       end
-    
+      
       def self.extract_key_from_configuration_file(key_name)
         read_configuration_file[key_name]
       end
-    
+      
       def self.report_inability_to_find_key(key_name)
         raise ConfigurationMissing, "Could not find configuration information for #{key_name}"
       end
-    
+      
       def self.read_configuration_file
         eval(File.read(configuration_file_path))
       end
-    
+      
       def service
-        @service ||= Service.new(API_SERVER_BASE_URL, API_PATH_REST, @api_key)      
+        @service ||= Service.new(Facebooker.api_server_base, Facebooker.api_rest_path, @api_key)      
       end
-    
+      
       def uid
         @uid || (secure!; @uid)
+      end
+      
+      def uid?
+        ! @uid.nil?
       end
       
       def signature_for(params)
@@ -455,7 +539,7 @@ module Facebooker
           collection
         end.sort.join
         Digest::MD5.hexdigest([raw_string, secret_for_method(params[:method])].join)
-      end        
+      end
   end
   
   class CanvasSession < Session

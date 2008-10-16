@@ -3,10 +3,12 @@ require 'rubygems'
 require 'flexmock/test_unit'
 require 'action_controller'
 require 'action_controller/test_process'
+require 'active_record'
 require File.dirname(__FILE__)+'/../init'
 require 'facebooker/rails/controller'
 require 'facebooker/rails/helpers'
 require 'facebooker/rails/publisher'
+
 
 module SymbolHelper
   def symbol_helper_loaded
@@ -72,17 +74,42 @@ class TestPublisher < Facebooker::Rails::Publisher
   def profile_update(to,f)
     send_as :profile
     recipients to
+    profile "profile"
+    profile_action "profile_action"
+    mobile_profile "mobile_profile"
+    
+  end
+  
+   def profile_update_with_profile_main(to,f)
+    send_as :profile
+    recipients to
     from f
     profile "profile"
     profile_action "profile_action"
     mobile_profile "mobile_profile"
+    profile_main "profile_main"
   end
   
   def ref_update(user)
     send_as :ref
-    from user
     fbml "fbml"
     handle "handle"
+  end
+  
+  def user_action_template
+    one_line_story_template "{*actor*} did stuff with {*friend*}"
+    short_story_template "{*actor*} has a title {*friend*}", render(:inline=>"This is a test render")
+    full_story_template "{*actor*} did a lot","This is the full body",:img=>{:some_params=>true}
+  end
+  
+  def user_action(user)
+    send_as :user_action
+    from user
+    data :friend=>"Mike"
+  end
+  def user_action_no_data(user)
+    send_as :user_action
+    from user
   end
   
   def no_send_as(to)
@@ -95,7 +122,6 @@ class TestPublisher < Facebooker::Rails::Publisher
   end
   
 end
-
 
 class PublisherTest < Test::Unit::TestCase
   
@@ -172,21 +198,28 @@ class PublisherTest < Test::Unit::TestCase
     assert_equal "profile_action",p.profile_action
     assert_equal "mobile_profile",p.mobile_profile
   end
+   def test_create_profile_update_with_profile_main
+    p=TestPublisher.create_profile_update_with_profile_main(@user,@user)
+    assert_equal Facebooker::Rails::Publisher::Profile,p.class
+    assert_equal "profile",p.profile
+    assert_equal "profile_action",p.profile_action
+    assert_equal "mobile_profile",p.mobile_profile
+    assert_equal "profile_main",p.profile_main
+  end
   
-  def test_deliver_profile_update_same_session
-    @user.expects(:set_profile_fbml)
-    TestPublisher.deliver_profile_update(@user,@user)
+  
+  def test_deliver_profile
+    Facebooker::User.stubs(:new).returns(@user)
+    @user.expects(:set_profile_fbml).with('profile', 'mobile_profile', 'profile_action',nil)
+    TestPublisher.deliver_profile_update(@user,@user)    
   end
-  def test_deliver_profile_update_same_session
-    @from_user = Facebooker::User.new
-    @new_user = Facebooker::User.new
-    @from_user.id =7
-    @session2 = Facebooker::Session.new("","")
-    @from_user.stubs(:session).returns(@session2)
-    Facebooker::User.expects(:new).with(@user,@from_user.session).returns(@new_user)
-    @new_user.expects(:set_profile_fbml)
-    TestPublisher.deliver_profile_update(@user,@from_user)
+  
+   def test_deliver_profile_with_main
+    Facebooker::User.stubs(:new).returns(@user)
+    @user.expects(:set_profile_fbml).with('profile', 'mobile_profile', 'profile_action','profile_main')
+    TestPublisher.deliver_profile_update_with_profile_main(@user,@user)    
   end
+  
   
   def test_create_ref_update
     p=TestPublisher.create_ref_update(@user)
@@ -196,10 +229,44 @@ class PublisherTest < Test::Unit::TestCase
   end
   
   def test_deliver_ref_update
+    Facebooker::Session.stubs(:create).returns(@session)
     @server_cache="server_cache"
     @session.expects(:server_cache).returns(@server_cache)
     @server_cache.expects(:set_ref_handle).with("handle","fbml")
     TestPublisher.deliver_ref_update(@user)
+  end
+  
+  def test_register_user_action
+    ActionController::Base.append_view_path("./test/../../app/views")
+    Facebooker::Session.any_instance.expects(:register_template_bundle)
+    Facebooker::Rails::Publisher::FacebookTemplate.expects(:register)
+    TestPublisher.register_user_action
+  end
+  
+  def test_create_user_action
+      @from_user = Facebooker::User.new
+      @session = Facebooker::Session.new("","")
+      @from_user.stubs(:session).returns(@session)
+      ua=TestPublisher.create_user_action(@from_user)
+      assert_equal "user_action",ua.template_name
+    end
+  
+  def test_publisher_user_action
+    @from_user = Facebooker::User.new
+    @session = Facebooker::Session.new("","")
+    @from_user.stubs(:session).returns(@session)
+    @session.expects(:publish_user_action).with(20309041537,{:friend=>"Mike"},nil,nil)
+    Facebooker::Rails::Publisher::FacebookTemplate.expects(:for).returns(20309041537)
+    TestPublisher.deliver_user_action(@from_user)
+  end
+  
+  def test_publishing_user_data_no_action_gives_nil_hash
+    @from_user = Facebooker::User.new
+    @session = Facebooker::Session.new("","")
+    @from_user.stubs(:session).returns(@session)
+    @session.expects(:publish_user_action).with(20309041537,{},nil,nil)
+    Facebooker::Rails::Publisher::FacebookTemplate.expects(:for).returns(20309041537)
+    TestPublisher.deliver_user_action_no_data(@from_user)
   end
   def test_no_sends_as_raises
     assert_raises(Facebooker::Rails::Publisher::UnspecifiedBodyType) {
@@ -224,6 +291,14 @@ class PublisherTest < Test::Unit::TestCase
     }
   end
   
+  def test_image_urls
+    Facebooker.expects(:facebook_path_prefix).returns("/mike")
+    assert_equal({:src => '/images/image.png', :href => 'raw_string' },
+        TestPublisher.new.image('image.png', 'raw_string'))
+    assert_equal({:src => '/images/image.png', :href => 'http://apps.facebook.com/mike/pokes/do/1' },
+        TestPublisher.new.image('image.png', {:controller => :pokes, :action => :do, :id => 1}))    
+  end
+  
   def test_default_url_options
     Facebooker.expects(:facebook_path_prefix).returns("/mike")
     assert_equal({:host=>"apps.facebook.com/mike"},TestPublisher.default_url_options)
@@ -243,9 +318,21 @@ class PublisherTest < Test::Unit::TestCase
   end
   
   def test_with_render
+    #normally Rails would do this for us
+    if ActionController::Base.respond_to?(:append_view_path)
+      ActionController::Base.append_view_path("./test/../../app/views")
+    end
     notification=TestPublisher.create_render_notification(12451752,@user)
     assert_equal "true",notification.fbml
   end
   
+  def test_notification_as_announcement
+    #normally Rails would do this for us
+    if ActionController::Base.respond_to?(:append_view_path)
+      ActionController::Base.append_view_path("./test/../../app/views")
+    end
+    notification=TestPublisher.create_render_notification(12451752,nil)
+    assert_equal "true",notification.fbml
+  end
 end
   

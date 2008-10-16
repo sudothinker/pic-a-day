@@ -8,9 +8,15 @@ module Facebooker
       @api_key = api_key
     end
     
-   # TODO: support ssl 
-   def post(params)
+    # TODO: support ssl 
+    def post(params)
+      attempt = 0
       Parser.parse(params[:method], Net::HTTP.post_form(url, params))
+    rescue Errno::ECONNRESET, EOFError
+      if attempt == 0
+        attempt += 1
+        retry
+      end
     end
     
     def post_file(params)
@@ -18,8 +24,8 @@ module Facebooker
     end
     
     private
-      def url
-        URI.parse('http://'+ @api_base + @api_path)      
-      end
+    def url
+      URI.parse('http://'+ @api_base + @api_path)
+    end
   end
 end

@@ -1,3 +1,4 @@
+
 function $(element) {
 	if (typeof element == "string") {
 		element=document.getElementById(element);
@@ -33,7 +34,16 @@ var Element = {
 };
 
 function encodeURIComponent(str) {
-	return str.replace('=','%3D').replace('&','%26');
+	if (typeof(str) == "string") {
+		return str.replace(/=/g,'%3D').replace(/&/g,'%26');
+	}
+	//checkboxes and radio buttons return objects instead of a string
+	else if(typeof(str) == "object"){
+		for (prop in str)
+		{
+			return str[prop].replace(/=/g,'%3D').replace(/&/g,'%26');
+		}
+	}
 };
 
 var Form = {};
@@ -65,21 +75,32 @@ Ajax.Updater = function (container,url,options) {
 	if (options["onFailure"]) {
 		this.ajax.onerror = options["onFailure"];
 	}
+
 	// Yes, this is an excercise in undoing what we just did
 	// FB doesn't provide encodeURI, but they will encode things passed as a hash
 	// so we turn it into a string, esaping & and =
 	// then we split it all back out here
 	// this could be killed if encodeURIComponent was available
 	parameters={};
-	pairs=options['parameters'].split('&');
-	for (var i=0; i<pairs.length; i++) {
-		kv=pairs[i].split('=');
-		key=kv[0].replace('%3D','=').replace('%26','&');
-		val=kv[1].replace('%3D','=').replace('%26','&');
-		parameters[key]=val;
+  if (options['parameters']) {
+		pairs=options['parameters'].split('&');	
+		for (var i=0; i<pairs.length; i++) {
+			kv=pairs[i].split('=');
+			key=kv[0].replace(/%3D/g,'=').replace(/%26/g,'&');
+			val=kv[1].replace(/%3D/g,'=').replace(/%26/g,'&');
+			parameters[key]=val;
+		}
 	}
   this.ajax.post(url,parameters);	
+	if (options["onLoading"]) {
+     options["onLoading"].call() 
+  }
 };
 Ajax.Request = function(url,options) {
 	Ajax.Updater('unused',url,options);
+};
+
+PeriodicalExecuter = function (callback, frequency) {
+        setTimeout(callback, frequency *1000);
+        setTimeout(function() { new PeriodicalExecuter(callback,frequency); }, frequency*1000);
 };

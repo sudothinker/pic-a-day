@@ -8,6 +8,32 @@ module Facebooker
     #
     module Helpers
       
+      
+      # Create an fb:dialog
+      # id must be a unique name e.g. "my_dialog"
+      # cancel_button is true or false
+      def fb_dialog( id, cancel_button, &block )
+        content = capture(&block)
+        concat( content_tag("fb:dialog", content, {:id => id, :cancel_button => cancel_button}), block.binding )
+      end
+      
+      def fb_dialog_title( title )
+        content_tag "fb:dialog-title", title
+      end
+      
+      def fb_dialog_content( &block )
+        content = capture(&block)  
+        concat( content_tag("fb:dialog-content", content), block.binding )      
+      end
+      
+      def fb_dialog_button( type, value, options={} )
+        options.assert_valid_keys FB_DIALOG_BUTTON_VALID_OPTION_KEYS
+        options.merge! :type => type, :value => value
+        tag "fb:dialog-button", options
+      end
+      
+      FB_DIALOG_BUTTON_VALID_OPTION_KEYS = [:close_dialog, :href, :form_id, :clickrewriteurl, :clickrewriteid, :clickrewriteform]
+      
       # Create an fb:request-form without a selector
       #
       # The block passed to this tag is used as the content of the form
@@ -23,11 +49,11 @@ module Facebooker
       #    Send a poke to: <%= fb_friend_selector %> <br />
       #    <%= fb_request_form_submit %>
       #  <% end %>
-      def fb_request_form(type,message_param,url,&block)
+      def fb_request_form(type,message_param,url,options={},&block)
         content = capture(&block)
         message = @template.instance_variable_get("@content_for_#{message_param}") 
-        concat(content_tag("fb:request-form", content,
-                  {:action=>url,:method=>"post",:invite=>true,:type=>type,:content=>message}),
+        concat(content_tag("fb:request-form", content + token_tag,
+                  {:action=>url,:method=>"post",:invite=>true,:type=>type,:content=>message}.merge(options)),
               block.binding)
       end
 
@@ -58,9 +84,9 @@ module Facebooker
       #    <%= fb_req_choice("They will get this button, too",new_poke_path) %>
       #  <% end %>
       def fb_multi_friend_request(type,friend_selector_message,url,&block)
-        content = capture(&block)  	
-        concat(content_tag("fb:request-form", 
-                            fb_multi_friend_selector(friend_selector_message),
+        content = capture(&block)
+        concat(content_tag("fb:request-form",
+                            fb_multi_friend_selector(friend_selector_message) + token_tag,
                             {:action=>url,:method=>"post",:invite=>true,:type=>type,:content=>content}
                             ),
               block.binding)
@@ -155,6 +181,7 @@ module Facebooker
 
         concat(tag("fb:editor",editor_options,true) , proc.binding)
         concat(tag(:input,{:type=>"hidden",:name=>:_method, :value=>method},false), proc.binding) unless method.blank?
+        concat(token_tag, proc.binding)
         fields_for( object_name,*(args << options), &proc)
         concat("</fb:editor>",proc.binding)
       end
@@ -256,7 +283,7 @@ module Facebooker
       VALID_FB_SHARED_PHOTO_SIZES = [:thumb, :small, :normal, :square]
       VALID_FB_PHOTO_SIZES = VALID_FB_SHARED_PHOTO_SIZES      
       VALID_FB_PROFILE_PIC_SIZES = VALID_FB_SHARED_PHOTO_SIZES
-      
+      VALID_PERMISSIONS=[:email, :offline_access, :status_update, :photo_upload, :create_listing]
       
       # Render an fb:tabs tag containing some number of fb:tab_item tags.
       # Example:
@@ -443,7 +470,8 @@ module Facebooker
       def fb_if_is_app_user(user,options={},&proc)
         content = capture(&proc) 
         options = options.dup
-        concat(content_tag("fb:if-is-app-user",content,stringify_vals(options.merge(:uid=>cast_to_facebook_id(user)))),proc.binding)
+        options.merge!(:uid=>cast_to_facebook_id(user)) if user
+        concat(content_tag("fb:if-is-app-user",content,stringify_vals(options)),proc.binding)
       end
 
       # Render if-user-has-added-app tag
@@ -482,7 +510,7 @@ module Facebooker
       
       # Render fb:else tag
       # Must be used within if block such as fb_if_is_user or fb_if_is_app_user . See example in fb_if_is_app_user
-      def fb_else
+      def fb_else(&proc)
         content = capture(&proc) 
         concat(content_tag("fb:else",content),proc.binding)
       end
@@ -490,7 +518,7 @@ module Facebooker
       #
       # Return the URL for the about page of the application
       def fb_about_url
-        "http://www.facebook.com/apps/application.php?api_key=#{ENV["FACEBOOK_API_KEY"]}"
+        "http://#{Facebooker.www_server_base_url}/apps/application.php?api_key=#{Facebooker.api_key}"
       end
       
       #
@@ -501,6 +529,20 @@ module Facebooker
         tag("fb:board",stringify_vals(options.merge(:xid=>xid)))
       end
       
+      def fb_add_profile_section
+        tag "fb:add-section-button",:section=>"profile"
+      end
+      
+      def fb_add_info_section
+        tag "fb:add-section-button",:section=>"info"
+      end
+      
+      def fb_prompt_permission(permission,message,callback=nil)
+        raise(ArgumentError, "Unknown value for permission: #{permission}") unless VALID_PERMISSIONS.include?(permission.to_sym)
+        args={:perms=>permission}
+        args[:next_fbjs]=callback unless callback.nil?
+        content_tag("fb:prompt-permission",message,args)
+      end
       
       protected
       
@@ -535,7 +577,15 @@ module Facebooker
         else
           content_tag("fb:#{type}", content_tag("fb:message", message) + text)
         end
-      end      
+      end
+
+      def token_tag
+        unless protect_against_forgery?
+          ''
+        else
+          tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token)
+        end
+      end
     end
   end
 end
@@ -555,4 +605,11 @@ class Hash
     self[newkey] = self.delete(oldkey) if self.has_key?(oldkey)
     self
   end
+
+  # We can allow css attributes.
+  FB_ALWAYS_VALID_OPTION_KEYS = [:class, :style]
+  def assert_valid_keys(*valid_keys)
+    unknown_keys = keys - [valid_keys + FB_ALWAYS_VALID_OPTION_KEYS].flatten
+    raise(ArgumentError, "Unknown key(s): #{unknown_keys.join(", ")}") unless unknown_keys.empty?
+  end    
 end
