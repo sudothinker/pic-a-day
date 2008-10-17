@@ -1,12 +1,13 @@
 class PicadayPublisher < Facebooker::Rails::Publisher
   # Action is published using the session of the from user
+=begin
   def action(f)
     send_as :story
     from f
     title %(<fb:name uid="#{f.id}" useyou="false" capitalize="true" /> took a picture of #{f.sex == 'male' ? 'him' : 'her'}self today)
     body link_to("Take a picture of yourself with your webcam today", "http://apps.facebook.com/apictureeveryday")
   end
-  
+=end  
   def templatized_news_feed(user, picture)
     send_as :templatized_action
     from(user)
