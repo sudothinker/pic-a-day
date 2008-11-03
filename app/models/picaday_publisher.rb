@@ -27,7 +27,7 @@ class PicadayPublisher < Facebooker::Rails::Publisher
     
     data(:images => [{:src => picture.authenticated_s3_url, :href => "http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}"}],
          :take_yours => %(<a href="http://apps.facebook.com/apictureeveryday">Take yours</a>),
-         :picture => "http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}")    
+         :picture => %(<a href="http://apps.facebook.com/apictureeveryday/pictures/#{picture.id}">picture</a>))    
   end
 
 
