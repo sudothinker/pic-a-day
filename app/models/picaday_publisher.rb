@@ -18,7 +18,7 @@ class PicadayPublisher < Facebooker::Rails::Publisher
     data(:images => [{:src => comment.picture.authenticated_s3_url, :href => "http://apps.facebook.com/apictureeveryday/pictures/#{comment.picture.id}"}],
          :comment => comment.text,
          :picture => %(<a href="http://apps.facebook.com/apictureeveryday/pictures/#{comment.picture.id}">picture</a>),
-         :owner => %(<fb:name uid="#{comment.picture.fb_user_id}" capitalize="true" />))
+         :owner => %(<fb:name uid="#{comment.picture.fb_user_id}" capitalize="true" useyou="false" />))
   end
   
   def publish_comment_template
