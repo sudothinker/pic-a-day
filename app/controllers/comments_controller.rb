@@ -5,8 +5,9 @@ class CommentsController < ApplicationController
     @comment.fb_user_id = facebook_user.id
     if @comment.save
       begin
-        facebook_user.publish_action(@comment.story)
-      rescue Facebooker::Session::TooManyUserActionCalls
+        PicadayPublisher.deliver_publish_comment(facebook_user, @comment)
+      rescue Exception => exception
+        ExceptionNotifier.deliver_exception_notification(exception, self, request)
       end
       redirect_to picture_path(@comment.picture)
     else
